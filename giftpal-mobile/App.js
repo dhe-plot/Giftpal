@@ -9,6 +9,7 @@ import { Platform } from 'react-native';
 
 // Import screens
 import HomeScreen from './src/screens/HomeScreen';
+import SimpleWebHome from './src/screens/SimpleWebHome';
 import ExploreScreen from './src/screens/ExploreScreen';
 import GiftsScreen from './src/screens/GiftsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -24,7 +25,7 @@ function HomeStack() {
     <Stack.Navigator>
       <Stack.Screen
         name="HomeMain"
-        component={HomeScreen}
+        component={SimpleWebHome}
         options={{ headerShown: false }}
       />
       <Stack.Screen
