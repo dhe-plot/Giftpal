@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  SafeAreaView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
   const [likedStories, setLikedStories] = useState({});
+
+  // Add error boundary
+  try {
 
   const featuredStories = [
     {
@@ -154,15 +154,13 @@ const HomeScreen = ({ navigation }) => {
           style={styles.actionButton}
           onPress={() => toggleLike(story.id)}
         >
-          <Ionicons
-            name={likedStories[story.id] ? "heart" : "heart-outline"}
-            size={20}
-            color={likedStories[story.id] ? "#ef4444" : "#94a3b8"}
-          />
+          <Text style={[styles.actionIcon, { color: likedStories[story.id] ? "#ef4444" : "#94a3b8" }]}>
+            {likedStories[story.id] ? "❤️" : "🤍"}
+          </Text>
           <Text style={styles.actionText}>{story.likes + (likedStories[story.id] ? 1 : 0)}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="chatbubble-outline" size={20} color="#94a3b8" />
+          <Text style={styles.actionIcon}>💬</Text>
           <Text style={styles.actionText}>{story.comments}</Text>
         </TouchableOpacity>
         <Text style={styles.timeAgo}>{story.timeAgo}</Text>
@@ -182,7 +180,7 @@ const HomeScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Top Navigation */}
       <View style={styles.topNav}>
         <View style={styles.logo}>
@@ -209,7 +207,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.topActions}>
           <TouchableOpacity style={styles.themeToggle}>
-            <Ionicons name="sunny" size={20} color="#fbbf24" />
+            <Text style={styles.themeIcon}>☀️</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.signInButton}>
             <Text style={styles.signInText}>Sign In</Text>
@@ -224,7 +222,7 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.storiesHeader}>
             <Text style={styles.featuredTitle}>Featured Stories</Text>
             <TouchableOpacity style={styles.shareStoryButton}>
-              <Ionicons name="add" size={16} color="white" />
+              <Text style={styles.addIcon}>+</Text>
               <Text style={styles.shareStoryText}>Share Your Story</Text>
             </TouchableOpacity>
           </View>
@@ -244,8 +242,24 @@ const HomeScreen = ({ navigation }) => {
           {featuredGifts.map(renderFeaturedGift)}
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
+
+  } catch (error) {
+    // Fallback UI
+    return (
+      <View style={styles.container}>
+        <View style={styles.topNav}>
+          <Text style={styles.logoTitle}>🎁 GIFTPAL</Text>
+          <Text style={styles.signInText}>Loading...</Text>
+        </View>
+        <View style={styles.mainContent}>
+          <Text style={styles.featuredTitle}>Welcome to GiftPal!</Text>
+          <Text style={styles.storyContent}>The social gifting platform is loading...</Text>
+        </View>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -304,6 +318,18 @@ const styles = StyleSheet.create({
   themeToggle: {
     marginRight: 15,
     padding: 8,
+  },
+  themeIcon: {
+    fontSize: 20,
+  },
+  addIcon: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  actionIcon: {
+    fontSize: 16,
+    marginRight: 4,
   },
   signInButton: {
     backgroundColor: '#10b981',
