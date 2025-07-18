@@ -3,8 +3,11 @@
   "name": "giftpal",
   "builds": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
+      "src": "giftpal-mobile/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "giftpal-mobile/dist"
+      }
     }
   ],
   "routes": [
