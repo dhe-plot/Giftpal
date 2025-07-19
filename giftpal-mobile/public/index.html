@@ -6,102 +6,440 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>GiftPal - AI-Powered Gift Recommendations</title>
     <style>
-        html, body, #root {
-            width: 100%;
-            height: 100%;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #0f172a;
+            box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #0f172a;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-        }
-
-        #root {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Loading screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             color: white;
-            z-index: 9999;
         }
 
-        .loading-logo {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1e293b;
+            border-bottom: 1px solid #374151;
         }
 
-        .loading-text {
-            font-size: 1.5rem;
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            margin-right: 4px;
+        }
+
+        .logo-subtitle {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            margin: 0 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-link.active {
             color: #10b981;
-            margin-bottom: 30px;
         }
 
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(16, 185, 129, 0.3);
-            border-top: 3px solid #10b981;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .top-actions {
+            display: flex;
+            align-items: center;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
+        .theme-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .sign-in-button {
+            background-color: #10b981;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .featured-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .share-story-button {
+            display: flex;
+            align-items: center;
+            background-color: #10b981;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .add-icon {
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        /* Story Card */
+        .story-card {
+            background-color: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #374151;
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+        }
+
+        .gift-master-badge {
+            background-color: #10b981;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-stats {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .follow-button {
+            background-color: #10b981;
+            padding: 6px 16px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .story-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .story-content {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Product Card */
+        .product-card {
+            display: flex;
+            background-color: #374151;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .buy-now-button {
+            background-color: #10b981;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        /* Story Actions */
+        .story-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        .action-text {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .time-ago {
+            color: #6b7280;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        /* Featured Gifts Sidebar */
+        .sidebar {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-gift-card {
+            background-color: #374151;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .sidebar-gift-image {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            object-fit: cover;
+        }
+
+        .sidebar-gift-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-gift-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .main-content {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="root">
-        <div class="loading-screen" id="loading-screen">
-            <div class="loading-logo">🎁</div>
-            <div class="loading-text">GiftPal</div>
-            <div class="loading-spinner"></div>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="logo">
+            <span class="logo-text">🎁 GIFTPAL</span>
+            <span class="logo-subtitle">BY DHE PLOT</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">Home</a>
+            <a href="#" class="nav-link">Gifts</a>
+            <a href="#" class="nav-link">Brands</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Sell</a>
+        </div>
+        <div class="top-actions">
+            <span class="theme-icon">☀️</span>
+            <button class="sign-in-button">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Featured Stories Header -->
+        <div class="stories-header">
+            <h1 class="featured-title">Featured Stories</h1>
+            <button class="share-story-button">
+                <span class="add-icon">+</span>
+                Share Your Story
+            </button>
+        </div>
+
+        <!-- Story Card -->
+        <div class="story-card">
+            <div class="story-header">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=50&h=50&fit=crop&crop=face"
+                     alt="Sarah Chen" class="user-avatar">
+                <div class="user-info">
+                    <div class="user-name-row">
+                        <span class="user-name">Sarah Chen</span>
+                        <span class="gift-master-badge">🎁 Gift Master</span>
+                    </div>
+                    <div class="user-stats">1250 followers • 89 gifts given</div>
+                </div>
+                <button class="follow-button">Follow</button>
+            </div>
+
+            <h2 class="story-title">Perfect Anniversary Surprise</h2>
+            <p class="story-content">
+                Found the most amazing personalized jewelry for my husband's 5th anniversary.
+                The craftsmanship was incredible and his reaction was priceless! 💎✨
+            </p>
+
+            <!-- Product Card -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop"
+                     alt="Custom Engraved Watch" class="product-image">
+                <div class="product-info">
+                    <div class="product-name">Custom Engraved Watch</div>
+                    <div class="product-price">$299</div>
+                </div>
+                <button class="buy-now-button">Buy Now</button>
+            </div>
+
+            <!-- Story Actions -->
+            <div class="story-actions">
+                <button class="action-button" onclick="toggleLike(this)">
+                    <span class="action-icon">❤️</span>
+                    <span class="action-text">42</span>
+                </button>
+                <button class="action-button">
+                    <span class="action-icon">💬</span>
+                    <span class="action-text">8</span>
+                </button>
+                <span class="time-ago">2 hours ago</span>
+            </div>
+        </div>
+
+        <!-- Featured Gifts Sidebar -->
+        <div class="sidebar">
+            <h3 class="sidebar-title">Featured Gifts</h3>
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop"
+                     alt="Luxury Spa Set" class="sidebar-gift-image">
+                <div class="sidebar-gift-title">Luxury Spa Set</div>
+                <div class="sidebar-gift-price">$89.99</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Hide loading screen when app loads
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                if (loadingScreen) {
-                    loadingScreen.style.opacity = '0';
-                    loadingScreen.style.transition = 'opacity 0.5s ease';
-                    setTimeout(function() {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                }
-            }, 1000);
+        function toggleLike(button) {
+            const icon = button.querySelector('.action-icon');
+            const text = button.querySelector('.action-text');
+            const currentLikes = parseInt(text.textContent);
+
+            if (icon.textContent === '❤️') {
+                icon.textContent = '🤍';
+                text.textContent = currentLikes - 1;
+            } else {
+                icon.textContent = '❤️';
+                text.textContent = currentLikes + 1;
+            }
+        }
+
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('GiftPal loaded successfully!');
         });
     </script>
 </body>
