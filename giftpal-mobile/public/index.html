@@ -401,6 +401,68 @@
             color: #10b981;
         }
 
+        /* Trending Section */
+        .trending-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+        }
+
+        .trending-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #374151;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-emoji {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .trending-info {
+            flex: 1;
+        }
+
+        .trending-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .trending-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Load More Button */
+        .load-more-container {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .load-more-button {
+            background-color: #374151;
+            color: white;
+            border: 2px solid #10b981;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-button:hover {
+            background-color: #10b981;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -557,6 +619,127 @@
                     <span class="time-ago">5 hours ago</span>
                 </div>
             </div>
+
+            <!-- Story Card 3 - Emma Wilson -->
+            <div class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face"
+                         alt="Emma Wilson" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name-row">
+                            <span class="user-name">Emma Wilson</span>
+                            <span class="gift-master-badge">🎁 Gift Master</span>
+                        </div>
+                        <div class="user-stats">2.1k followers • 156 gifts given</div>
+                    </div>
+                    <button class="follow-button">Follow</button>
+                </div>
+
+                <h2 class="story-title">Housewarming Success!</h2>
+                <p class="story-content">
+                    Found the perfect housewarming gift for my best friend's new apartment. This smart home starter kit
+                    was exactly what she needed to make her place feel like home! 🏠✨
+                </p>
+
+                <!-- Tags -->
+                <div class="tags-container">
+                    <span class="tag">Housewarming</span>
+                    <span class="tag">Best Friend</span>
+                </div>
+
+                <!-- Product Card -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop"
+                         alt="Smart Home Starter Kit" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Smart Home Starter Kit</div>
+                        <div class="product-price">$199</div>
+                        <div class="product-tags">
+                            <span class="product-tag">Smart Home</span>
+                            <span class="product-tag">Tech</span>
+                            <span class="product-tag">Practical</span>
+                        </div>
+                    </div>
+                    <button class="buy-now-button">Buy Now</button>
+                </div>
+
+                <!-- Story Actions -->
+                <div class="story-actions">
+                    <button class="action-button" onclick="toggleLike(this)">
+                        <span class="action-icon">❤️</span>
+                        <span class="action-text">67</span>
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">12</span>
+                    </button>
+                    <span class="time-ago">1 day ago</span>
+                </div>
+            </div>
+
+            <!-- Story Card 4 - David Kim -->
+            <div class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face"
+                         alt="David Kim" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name-row">
+                            <span class="user-name">David Kim</span>
+                            <span class="gift-giver-badge">🎁 Gift Giver</span>
+                        </div>
+                        <div class="user-stats">654 followers • 32 gifts given</div>
+                    </div>
+                    <button class="follow-button">Follow</button>
+                </div>
+
+                <h2 class="story-title">Dad's Retirement Gift</h2>
+                <p class="story-content">
+                    After 30 years of hard work, my dad deserved something special for his retirement. This premium
+                    whiskey collection brought tears to his eyes. Mission accomplished! 🥃
+                </p>
+
+                <!-- Tags -->
+                <div class="tags-container">
+                    <span class="tag">Retirement</span>
+                    <span class="tag">Father</span>
+                </div>
+
+                <!-- Product Card -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=300&h=300&fit=crop"
+                         alt="Premium Whiskey Collection" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Premium Whiskey Collection</div>
+                        <div class="product-price">$349</div>
+                        <div class="product-tags">
+                            <span class="product-tag">Premium</span>
+                            <span class="product-tag">Spirits</span>
+                            <span class="product-tag">Collector</span>
+                        </div>
+                    </div>
+                    <button class="buy-now-button">Buy Now</button>
+                </div>
+
+                <!-- Story Actions -->
+                <div class="story-actions">
+                    <button class="action-button" onclick="toggleLike(this)">
+                        <span class="action-icon">🤍</span>
+                        <span class="action-text">89</span>
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">23</span>
+                    </button>
+                    <span class="time-ago">2 days ago</span>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container">
+                <button class="load-more-button" onclick="loadMoreStories()">
+                    Load More Stories
+                </button>
+            </div>
         </div>
 
         <!-- Right Sidebar - Featured Gifts -->
@@ -595,6 +778,62 @@
                     <div class="sidebar-gift-price">$129.99</div>
                 </div>
             </div>
+
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=300&fit=crop"
+                     alt="Gourmet Chocolate Box" class="sidebar-gift-image">
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Gourmet Chocolate Box</div>
+                    <div class="sidebar-gift-description">Artisan chocolates from Belgium</div>
+                    <div class="sidebar-gift-price">$67.99</div>
+                </div>
+            </div>
+
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop"
+                     alt="Professional Art Supplies" class="sidebar-gift-image">
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Professional Art Supplies</div>
+                    <div class="sidebar-gift-description">Complete artist toolkit</div>
+                    <div class="sidebar-gift-price">$156.99</div>
+                </div>
+            </div>
+
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=300&fit=crop"
+                     alt="Premium Tea Collection" class="sidebar-gift-image">
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Premium Tea Collection</div>
+                    <div class="sidebar-gift-description">Rare teas from around the world</div>
+                    <div class="sidebar-gift-price">$78.99</div>
+                </div>
+            </div>
+
+            <!-- Trending Section -->
+            <div class="trending-section">
+                <h3 class="sidebar-title">Trending Now</h3>
+                <div class="trending-item">
+                    <span class="trending-emoji">🔥</span>
+                    <div class="trending-info">
+                        <div class="trending-title">Smart Watches</div>
+                        <div class="trending-subtitle">+45% this week</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-emoji">⭐</span>
+                    <div class="trending-info">
+                        <div class="trending-title">Personalized Gifts</div>
+                        <div class="trending-subtitle">Always popular</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-emoji">🎨</span>
+                    <div class="trending-info">
+                        <div class="trending-title">Art Supplies</div>
+                        <div class="trending-subtitle">Creative surge</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -607,15 +846,55 @@
             if (icon.textContent === '❤️') {
                 icon.textContent = '🤍';
                 text.textContent = currentLikes - 1;
+                button.style.transform = 'scale(0.95)';
             } else {
                 icon.textContent = '❤️';
                 text.textContent = currentLikes + 1;
+                button.style.transform = 'scale(1.1)';
             }
+
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 150);
         }
 
-        // Add some interactivity
+        function loadMoreStories() {
+            const button = document.querySelector('.load-more-button');
+            button.textContent = 'Loading...';
+            button.disabled = true;
+
+            // Simulate loading
+            setTimeout(() => {
+                button.textContent = 'Load More Stories';
+                button.disabled = false;
+                // In a real app, this would load more content
+                alert('More stories would be loaded here!');
+            }, 1500);
+        }
+
+        // Add hover effects and animations
         document.addEventListener('DOMContentLoaded', function() {
             console.log('GiftPal loaded successfully!');
+
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add click animations to buttons
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
         });
     </script>
 </body>
