@@ -91,9 +91,24 @@
 
         /* Main Content */
         .main-content {
-            padding: 20px;
-            max-width: 1200px;
+            display: flex;
+            max-width: 1400px;
             margin: 0 auto;
+            gap: 20px;
+        }
+
+        .left-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .right-sidebar {
+            width: 300px;
+            padding: 20px;
+            background-color: #1e293b;
+            border-left: 1px solid #374151;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
         }
 
         .stories-header {
@@ -175,6 +190,15 @@
             font-weight: 600;
         }
 
+        .gift-giver-badge {
+            background-color: #f59e0b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
         .user-stats {
             font-size: 12px;
             color: #94a3b8;
@@ -203,6 +227,22 @@
             color: #cbd5e1;
             line-height: 20px;
             margin-bottom: 15px;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background-color: #374151;
+            color: #94a3b8;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         /* Product Card */
@@ -237,6 +277,22 @@
             font-size: 18px;
             font-weight: bold;
             color: #10b981;
+            margin-bottom: 8px;
+        }
+
+        .product-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .product-tag {
+            background-color: #4b5563;
+            color: #94a3b8;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 500;
         }
 
         .buy-now-button {
@@ -282,24 +338,35 @@
         }
 
         /* Featured Gifts Sidebar */
-        .sidebar {
-            background-color: #1e293b;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .sidebar-title {
             font-size: 18px;
             font-weight: bold;
             color: #10b981;
-            margin-bottom: 16px;
+        }
+
+        .view-all-link {
+            color: #10b981;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .view-all-link:hover {
+            text-decoration: underline;
         }
 
         .sidebar-gift-card {
             background-color: #374151;
             border-radius: 12px;
             padding: 12px;
+            margin-bottom: 16px;
         }
 
         .sidebar-gift-image {
@@ -310,11 +377,22 @@
             object-fit: cover;
         }
 
+        .sidebar-gift-info {
+            flex: 1;
+        }
+
         .sidebar-gift-title {
             font-size: 14px;
             font-weight: bold;
             color: white;
             margin-bottom: 4px;
+        }
+
+        .sidebar-gift-description {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            line-height: 16px;
         }
 
         .sidebar-gift-price {
@@ -355,69 +433,167 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Featured Stories Header -->
-        <div class="stories-header">
-            <h1 class="featured-title">Featured Stories</h1>
-            <button class="share-story-button">
-                <span class="add-icon">+</span>
-                Share Your Story
-            </button>
-        </div>
+        <!-- Left Content - Stories -->
+        <div class="left-content">
+            <!-- Featured Stories Header -->
+            <div class="stories-header">
+                <h1 class="featured-title">Featured Stories</h1>
+                <button class="share-story-button">
+                    <span class="add-icon">+</span>
+                    Share Your Story
+                </button>
+            </div>
 
-        <!-- Story Card -->
-        <div class="story-card">
-            <div class="story-header">
-                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=50&h=50&fit=crop&crop=face"
-                     alt="Sarah Chen" class="user-avatar">
-                <div class="user-info">
-                    <div class="user-name-row">
-                        <span class="user-name">Sarah Chen</span>
-                        <span class="gift-master-badge">🎁 Gift Master</span>
+            <!-- Story Card 1 - Sarah Chen -->
+            <div class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=50&h=50&fit=crop&crop=face"
+                         alt="Sarah Chen" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name-row">
+                            <span class="user-name">Sarah Chen</span>
+                            <span class="gift-master-badge">🎁 Gift Master</span>
+                        </div>
+                        <div class="user-stats">1250 followers • 89 gifts given</div>
                     </div>
-                    <div class="user-stats">1250 followers • 89 gifts given</div>
+                    <button class="follow-button">Follow</button>
                 </div>
-                <button class="follow-button">Follow</button>
+
+                <h2 class="story-title">Perfect Anniversary Surprise</h2>
+                <p class="story-content">
+                    Found the most amazing personalized jewelry for my husband's 5th anniversary.
+                    The craftsmanship was incredible and his reaction was priceless! 💎✨
+                </p>
+
+                <!-- Tags -->
+                <div class="tags-container">
+                    <span class="tag">Anniversary</span>
+                    <span class="tag">Husband</span>
+                </div>
+
+                <!-- Product Card -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop"
+                         alt="Custom Engraved Watch" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Custom Engraved Watch</div>
+                        <div class="product-price">$299</div>
+                        <div class="product-tags">
+                            <span class="product-tag">Personalized</span>
+                            <span class="product-tag">Luxury</span>
+                            <span class="product-tag">Jewelry</span>
+                        </div>
+                    </div>
+                    <button class="buy-now-button">Buy Now</button>
+                </div>
+
+                <!-- Story Actions -->
+                <div class="story-actions">
+                    <button class="action-button" onclick="toggleLike(this)">
+                        <span class="action-icon">❤️</span>
+                        <span class="action-text">42</span>
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">8</span>
+                    </button>
+                    <span class="time-ago">2 hours ago</span>
+                </div>
             </div>
 
-            <h2 class="story-title">Perfect Anniversary Surprise</h2>
-            <p class="story-content">
-                Found the most amazing personalized jewelry for my husband's 5th anniversary.
-                The craftsmanship was incredible and his reaction was priceless! 💎✨
-            </p>
-
-            <!-- Product Card -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop"
-                     alt="Custom Engraved Watch" class="product-image">
-                <div class="product-info">
-                    <div class="product-name">Custom Engraved Watch</div>
-                    <div class="product-price">$299</div>
+            <!-- Story Card 2 - Mike Rodriguez -->
+            <div class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face"
+                         alt="Mike Rodriguez" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name-row">
+                            <span class="user-name">Mike Rodriguez</span>
+                            <span class="gift-giver-badge">🎁 Gift Giver</span>
+                        </div>
+                        <div class="user-stats">890 followers • 45 gifts given</div>
+                    </div>
+                    <button class="follow-button">Follow</button>
                 </div>
-                <button class="buy-now-button">Buy Now</button>
-            </div>
 
-            <!-- Story Actions -->
-            <div class="story-actions">
-                <button class="action-button" onclick="toggleLike(this)">
-                    <span class="action-icon">❤️</span>
-                    <span class="action-text">42</span>
-                </button>
-                <button class="action-button">
-                    <span class="action-icon">💬</span>
-                    <span class="action-text">8</span>
-                </button>
-                <span class="time-ago">2 hours ago</span>
+                <h2 class="story-title">Birthday Win for My Sister</h2>
+                <p class="story-content">
+                    She's been wanting this art set for months! The look on her face when she opened it was everything.
+                    Best brother award goes to me! 🎨
+                </p>
+
+                <!-- Tags -->
+                <div class="tags-container">
+                    <span class="tag">Birthday</span>
+                    <span class="tag">Sister</span>
+                </div>
+
+                <!-- Product Card -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop"
+                         alt="Professional Art Set" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Professional Art Set</div>
+                        <div class="product-price">$156</div>
+                        <div class="product-tags">
+                            <span class="product-tag">Creative</span>
+                            <span class="product-tag">Art</span>
+                            <span class="product-tag">Professional</span>
+                        </div>
+                    </div>
+                    <button class="buy-now-button">Buy Now</button>
+                </div>
+
+                <!-- Story Actions -->
+                <div class="story-actions">
+                    <button class="action-button" onclick="toggleLike(this)">
+                        <span class="action-icon">🤍</span>
+                        <span class="action-text">28</span>
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">5</span>
+                    </button>
+                    <span class="time-ago">5 hours ago</span>
+                </div>
             </div>
         </div>
 
-        <!-- Featured Gifts Sidebar -->
-        <div class="sidebar">
-            <h3 class="sidebar-title">Featured Gifts</h3>
+        <!-- Right Sidebar - Featured Gifts -->
+        <div class="right-sidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Featured Gifts</h3>
+                <a href="#" class="view-all-link">View All →</a>
+            </div>
+
             <div class="sidebar-gift-card">
                 <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop"
                      alt="Luxury Spa Set" class="sidebar-gift-image">
-                <div class="sidebar-gift-title">Luxury Spa Set</div>
-                <div class="sidebar-gift-price">$89.99</div>
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Luxury Spa Set</div>
+                    <div class="sidebar-gift-description">Premium spa collection for ultimate relaxation</div>
+                    <div class="sidebar-gift-price">$89.99</div>
+                </div>
+            </div>
+
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=300&h=300&fit=crop"
+                     alt="Artisan Coffee Collection" class="sidebar-gift-image">
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Artisan Coffee Collection</div>
+                    <div class="sidebar-gift-description">Handpicked coffee beans from around the world</div>
+                    <div class="sidebar-gift-price">$45.99</div>
+                </div>
+            </div>
+
+            <div class="sidebar-gift-card">
+                <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=300&fit=crop"
+                     alt="Personalized Jewelry" class="sidebar-gift-image">
+                <div class="sidebar-gift-info">
+                    <div class="sidebar-gift-title">Personalized Jewelry</div>
+                    <div class="sidebar-gift-description">Custom-made jewelry pieces</div>
+                    <div class="sidebar-gift-price">$129.99</div>
+                </div>
             </div>
         </div>
     </div>
