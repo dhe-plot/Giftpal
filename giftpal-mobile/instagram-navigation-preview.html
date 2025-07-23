@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftPal Instagram Navigation Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .phone-mockup {
+            width: 375px;
+            height: 812px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features li {
+            margin: 10px 0;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 85px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 8px 0 20px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        
+        .home-icon {
+            background: black;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+        
+        .search-icon {
+            background: #6b7280;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+        
+        .create-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #6b7280;
+            border-radius: 8px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4v16m8-8H4'/%3E%3C/svg%3E") no-repeat center;
+            background-size: 16px;
+        }
+        
+        .reels-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #6b7280;
+            border-radius: 8px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: 16px;
+        }
+        
+        .profile-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #6b7280;
+            border-radius: 50%;
+            background: #374151;
+            position: relative;
+        }
+        
+        .profile-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%236b7280' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+        
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .update-info {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .update-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .update-list {
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="screen">
+            <div class="update-info">
+                <div class="update-title">🎉 Instagram Navigation Added!</div>
+                <div class="update-list">
+                    ✅ 5 tabs without labels<br>
+                    ✅ White background<br>
+                    ✅ Square borders for Create/Reels<br>
+                    ✅ Profile with notification dot<br>
+                    ✅ "Share Your Story" feature<br>
+                    ✅ Full-screen gift stories
+                </div>
+            </div>
+            
+            <div class="logo">GIFTPAL</div>
+            <div class="tagline">Instagram-Style Navigation</div>
+            
+            <ul class="features">
+                <li>🏠 Home - Browse gifts</li>
+                <li>🔍 Search - Find perfect gifts</li>
+                <li>➕ Create - Share your story</li>
+                <li>▶️ Reels - Gift stories</li>
+                <li>👤 Profile - Your account</li>
+            </ul>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <div class="nav-icon home-icon"></div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon search-icon"></div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon create-icon"></div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon reels-icon"></div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon profile-icon">
+                    <div class="notification-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

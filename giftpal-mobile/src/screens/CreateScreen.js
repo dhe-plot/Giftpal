@@ -43,6 +43,17 @@ export default function CreateScreen({ navigation }) {
 
   const createOptions = [
     {
+      id: 'share-story',
+      title: 'Share Your Story',
+      subtitle: '✨ Tell the world about your amazing gift discovery!',
+      icon: 'heart',
+      gradient: ['#ec4899', '#be185d'],
+      featured: true,
+      onPress: () => {
+        navigation.navigate('ShareStory');
+      },
+    },
+    {
       id: 'gift-post',
       title: 'Gift Post',
       subtitle: 'Share a gift you found or received',
@@ -59,7 +70,7 @@ export default function CreateScreen({ navigation }) {
       icon: 'book',
       gradient: ['#8b5cf6', '#7c3aed'],
       onPress: () => {
-        Alert.alert('Gift Story', 'Create a gift story feature coming soon!');
+        navigation.navigate('ShareStory');
       },
     },
     {
@@ -79,7 +90,7 @@ export default function CreateScreen({ navigation }) {
       icon: 'storefront',
       gradient: ['#ef4444', '#dc2626'],
       onPress: () => {
-        navigation.navigate('SellerDashboard');
+        Alert.alert('Seller Dashboard', 'Seller dashboard feature coming soon!');
       },
     },
   ];
@@ -95,6 +106,30 @@ export default function CreateScreen({ navigation }) {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Featured: Share Your Story */}
+        <TouchableOpacity
+          style={styles.featuredStoryCard}
+          onPress={() => navigation.navigate('ShareStory')}
+        >
+          <LinearGradient
+            colors={['#ec4899', '#be185d']}
+            style={styles.featuredGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <View style={styles.featuredContent}>
+              <View style={styles.featuredIcon}>
+                <Ionicons name="heart" size={32} color="#fff" />
+              </View>
+              <View style={styles.featuredText}>
+                <Text style={styles.featuredTitle}>Share Your Story</Text>
+                <Text style={styles.featuredSubtitle}>✨ Tell the world about your amazing gift discovery!</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
+
         {/* Camera/Photo Section */}
         <View style={styles.photoSection}>
           <Text style={styles.sectionTitle}>Add Photo</Text>
@@ -129,8 +164,8 @@ export default function CreateScreen({ navigation }) {
 
         {/* Create Options */}
         <View style={styles.optionsSection}>
-          <Text style={styles.sectionTitle}>What would you like to create?</Text>
-          {createOptions.map((option) => (
+          <Text style={styles.sectionTitle}>More Creation Options</Text>
+          {createOptions.filter(option => !option.featured).map((option) => (
             <TouchableOpacity
               key={option.id}
               style={styles.optionCard}
@@ -204,6 +239,47 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
+  },
+  featuredStoryCard: {
+    marginTop: 20,
+    marginBottom: 30,
+    borderRadius: 20,
+    overflow: 'hidden',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  featuredGradient: {
+    padding: 20,
+  },
+  featuredContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  featuredIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  featuredText: {
+    flex: 1,
+  },
+  featuredTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 6,
+  },
+  featuredSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 22,
   },
   photoSection: {
     marginTop: 20,

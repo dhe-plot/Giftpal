@@ -19,6 +19,7 @@ import CartScreen from './src/screens/CartScreen';
 // Import new screens for Instagram-style navigation
 import CreateScreen from './src/screens/CreateScreen';
 import ReelsScreen from './src/screens/ReelsScreen';
+import ShareStoryScreen from './src/screens/ShareStoryScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -41,6 +42,11 @@ function HomeStack() {
         name="Cart"
         component={CartScreen}
         options={{ title: 'Shopping Cart' }}
+      />
+      <Stack.Screen
+        name="ShareStory"
+        component={ShareStoryScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
