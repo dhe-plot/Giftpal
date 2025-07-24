@@ -1,0 +1,24 @@
+{
+  "name": "giftpal-workspace",
+  "version": "1.0.0",
+  "description": "GIFTPAL workspace with sync utilities",
+  "private": true,
+  "scripts": {
+    "sync": "node sync-apps.js",
+    "sync:to-giftpal": "node sync-apps.js to-giftpal",
+    "sync:from-giftpal": "node sync-apps.js from-giftpal",
+    "sync:bidirectional": "node sync-apps.js bidirectional",
+    "dev:giftpal": "cd giftpal-app && npm run dev",
+    "dev:mr-gift": "cd mr-gift-app && npm run dev",
+    "build:giftpal": "cd giftpal-app && npm run build",
+    "build:mr-gift": "cd mr-gift-app && npm run build",
+    "install:all": "cd giftpal-app && npm install && cd ../mr-gift-app && npm install",
+    "clean": "cd giftpal-app && rm -rf node_modules dist && cd ../mr-gift-app && rm -rf node_modules dist"
+  },
+  "devDependencies": {
+    "chokidar": "^4.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
