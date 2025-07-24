@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MR GIFT - Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #181312;
+            color: white;
+            font-family: system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #FFB1EE, #ff6347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        
+        .card {
+            background: rgba(255, 177, 238, 0.1);
+            border: 1px solid rgba(255, 177, 238, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            background: #ff6347;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover {
+            background: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎁 MR GIFT</h1>
+    <div class="card">
+        <h2>Static Test Page</h2>
+        <p>This is a static HTML test to verify the server is working.</p>
+        <p>If you can see this, the server is running but React might have an issue.</p>
+        <button onclick="alert('Static HTML is working!')">Test Button</button>
+    </div>
+    <div style="margin-top: 2rem; text-align: center; color: #b8a89c;">
+        <p>Try accessing: <a href="/" style="color: #FFB1EE;">http://localhost:5173</a></p>
+    </div>
+</body>
+</html>
