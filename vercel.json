@@ -1,22 +1,14 @@
 {
   "version": 2,
   "name": "giftpal",
-  "builds": [
-    {
-      "src": "mr-gift-app/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "mr-gift-app/dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/mr-gift-app/dist/$1"
-    }
-  ],
   "buildCommand": "cd mr-gift-app && npm run build",
   "outputDirectory": "mr-gift-app/dist",
-  "installCommand": "cd mr-gift-app && npm install"
+  "installCommand": "cd mr-gift-app && npm install",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
