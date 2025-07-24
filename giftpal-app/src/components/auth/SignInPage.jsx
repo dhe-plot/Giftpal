@@ -173,7 +173,6 @@ export default function SignInPage() {
 
         .signin-card {
           animation: ${isFormVisible ? 'slideInUp 0.8s ease-out' : 'none'};
-          backdrop-filter: blur(20px);
           background: rgba(255, 255, 255, 0.95) !important;
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
