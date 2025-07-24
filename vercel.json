@@ -3,7 +3,7 @@
   "name": "giftpal",
   "builds": [
     {
-      "src": "mr-gift-app/package.json",
+      "src": "giftpal-app/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
