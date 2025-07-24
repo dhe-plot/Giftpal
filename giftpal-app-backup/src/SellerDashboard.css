@@ -1,0 +1,230 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #181312;
+  color: #fff;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.sidebar {
+  width: 220px;
+  background: #231b18;
+  padding: 32px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.profile-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  border: 2px solid #3a2c27;
+}
+
+.profile-name {
+  font-weight: 600;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.nav-links {
+  width: 100%;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 32px;
+  color: #cfc6c1;
+  font-size: 1rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.nav-link:hover, .nav-link:first-child {
+  background: #2d2320;
+  color: #fff;
+  border-left: 4px solid #e6b17a;
+}
+
+.nav-icon {
+  margin-right: 16px;
+  font-size: 1.2em;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px 48px;
+  background: #181312;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 28px;
+  font-weight: 700;
+}
+
+.stats-row {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.stat-card {
+  background: #231b18;
+  border-radius: 12px;
+  padding: 24px 36px;
+  min-width: 180px;
+  text-align: left;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+}
+
+.stat-label {
+  color: #b8a89c;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.sales-trends {
+  margin-bottom: 40px;
+}
+
+.sales-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sales-chart {
+  background: #231b18;
+  border-radius: 12px;
+  padding: 28px 32px 20px 32px;
+  margin-bottom: 8px;
+}
+
+.sales-overview {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 12px;
+}
+
+.sales-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.sales-growth {
+  color: #b8a89c;
+  font-size: 1rem;
+}
+
+.growth-positive {
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+.chart-placeholder {
+  height: 80px;
+  background: linear-gradient(90deg, #2d2320 60%, #231b18 100%);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b8a89c;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.chart-months {
+  display: flex;
+  justify-content: space-between;
+  color: #b8a89c;
+  font-size: 0.95rem;
+  padding: 0 4px;
+}
+
+.recent-orders {
+  margin-top: 32px;
+}
+
+.orders-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #231b18;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.orders-table th, .orders-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.orders-table th {
+  background: #231b18;
+  color: #b8a89c;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.orders-table tr {
+  border-bottom: 1px solid #2d2320;
+}
+
+.orders-table tr:last-child {
+  border-bottom: none;
+}
+
+.orders-table td {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.status-badge {
+  padding: 4px 14px;
+  border-radius: 16px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-shipped {
+  background: #e6b17a;
+  color: #231b18;
+}
+
+.status-delivered {
+  background: #6ee7b7;
+  color: #231b18;
+}
+
+.status-processing {
+  background: #fbbf24;
+  color: #231b18;
+}

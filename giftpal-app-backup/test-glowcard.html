@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced GlowCard Test</title>
+    <style>
+        /* Utility classes */
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .text-white { color: rgb(255 255 255); }
+        .text-center { text-align: center; }
+        .text-cyan-400 { color: rgb(34 211 238); }
+        .text-green-400 { color: rgb(74 222 128); }
+        .text-orange-400 { color: rgb(251 146 60); }
+        .text-gray-300 { color: rgb(209 213 219); }
+        .text-gray-400 { color: rgb(156 163 175); }
+        .bg-blue-500\/20 { background-color: rgb(59 130 246 / 0.2); }
+        .bg-green-500\/20 { background-color: rgb(34 197 94 / 0.2); }
+        .bg-orange-500\/20 { background-color: rgb(249 115 22 / 0.2); }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .rounded-full { border-radius: 9999px; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .mt-4 { margin-top: 1rem; }
+        .max-w-6xl { max-width: 72rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .gap-8 { gap: 2rem; }
+        .p-8 { padding: 2rem; }
+        .p-6 { padding: 1.5rem; }
+        .min-h-screen { min-height: 100vh; }
+        .w-full { width: 100%; }
+        .h-80 { height: 20rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .relative { position: relative; }
+        .shadow-\[0_1rem_2rem_-1rem_black\] { box-shadow: 0 1rem 2rem -1rem black; }
+        .backdrop-blur-\[5px\] { backdrop-filter: blur(5px); }
+        .hover\:scale-105:hover { transform: scale(1.05); }
+        .transition-transform { transition-property: transform; }
+        .duration-300 { transition-duration: 300ms; }
+        @media (min-width: 768px) {
+            .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+    </style></script>
+    <style>
+        body {
+            background: #181312;
+            font-family: system-ui, sans-serif;
+        }
+        
+        /* GlowCard Styles */
+        [data-glow]::before,
+        [data-glow]::after {
+            pointer-events: none;
+            content: "";
+            position: absolute;
+            inset: calc(var(--border-size) * -1);
+            border: var(--border-size) solid transparent;
+            border-radius: calc(var(--radius) * 1px);
+            background-attachment: fixed;
+            background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
+            mask-clip: padding-box, border-box;
+            mask-composite: intersect;
+        }
+        
+        [data-glow]::before {
+            background-image: radial-gradient(
+                calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
+                calc(var(--x, 0) * 1px)
+                calc(var(--y, 0) * 1px),
+                hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) / var(--border-spot-opacity, 1)), transparent 100%
+            );
+            filter: brightness(2);
+        }
+        
+        [data-glow]::after {
+            background-image: radial-gradient(
+                calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+                calc(var(--x, 0) * 1px)
+                calc(var(--y, 0) * 1px),
+                hsl(0 100% 100% / var(--border-light-opacity, 1)), transparent 100%
+            );
+        }
+        
+        [data-glow] [data-glow] {
+            position: absolute;
+            inset: 0;
+            will-change: filter;
+            opacity: var(--outer, 1);
+            border-radius: calc(var(--radius) * 1px);
+            border-width: calc(var(--border-size) * 20);
+            filter: blur(calc(var(--border-size) * 10));
+            background: none;
+            pointer-events: none;
+            border: none;
+        }
+        
+        [data-glow] > [data-glow]::before {
+            inset: -10px;
+            border-width: 10px;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-breathe {
+            animation: breathe 3s ease-in-out infinite;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold text-white text-center mb-12">
+            🌟 Enhanced GlowCard Showcase
+        </h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <!-- Blue Card -->
+            <div data-glow class="w-full h-80 rounded-2xl relative grid grid-rows-[1fr_auto] shadow-[0_1rem_2rem_-1rem_black] p-6 gap-4 backdrop-blur-[5px] hover:scale-105 transition-transform duration-300"
+                 style="--base: 220; --spread: 200; --radius: 16; --border: 3; --backdrop: hsl(0 0% 60% / 0.12); --backup-border: var(--backdrop); --size: 200; --outer: 1; --saturation: 80; --lightness: 60; --bg-spot-opacity: 0.1; --border-spot-opacity: 0.8; --border-light-opacity: 1; --border-size: calc(var(--border, 2) * 1px); --spotlight-size: calc(var(--size, 150) * 1px); --hue: calc(var(--base) + (var(--xp, 0) * var(--spread, 0))); background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 80) * 1%) calc(var(--lightness, 60) * 1%) / var(--bg-spot-opacity, 0.1)), transparent); background-color: var(--backdrop, transparent); background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size))); background-position: 50% 50%; background-attachment: fixed; border: var(--border-size) solid var(--backup-border); position: relative; touch-action: none; cursor: pointer;">
+                <div data-glow></div>
+                <div class="text-center">
+                    <div class="text-4xl mb-4">💎</div>
+                    <h3 class="text-cyan-400 text-xl font-bold mb-2">Premium Product</h3>
+                    <p class="text-gray-300 text-sm">High-quality item with blue glow</p>
+                    <div class="mt-4">
+                        <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs">Premium</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Green Card with Animation -->
+            <div data-glow class="w-full h-80 rounded-2xl relative grid grid-rows-[1fr_auto] shadow-[0_1rem_2rem_-1rem_black] p-6 gap-4 backdrop-blur-[5px] hover:scale-105 transition-transform duration-300 animate-breathe"
+                 style="--base: 120; --spread: 200; --radius: 16; --border: 3; --backdrop: hsl(0 0% 60% / 0.12); --backup-border: var(--backdrop); --size: 200; --outer: 1; --saturation: 100; --lightness: 70; --bg-spot-opacity: 0.15; --border-spot-opacity: 1; --border-light-opacity: 1; --border-size: calc(var(--border, 2) * 1px); --spotlight-size: calc(var(--size, 150) * 1px); --hue: calc(var(--base) + (var(--xp, 0) * var(--spread, 0))); background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.15)), transparent); background-color: var(--backdrop, transparent); background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size))); background-position: 50% 50%; background-attachment: fixed; border: var(--border-size) solid var(--backup-border); position: relative; touch-action: none; cursor: pointer;">
+                <div data-glow></div>
+                <div class="text-center">
+                    <div class="text-4xl mb-4">⭐</div>
+                    <h3 class="text-green-400 text-xl font-bold mb-2">Top Rated</h3>
+                    <p class="text-gray-300 text-sm">Verified product with breathing effect</p>
+                    <div class="mt-4">
+                        <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs">Verified</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orange Card with Pulse -->
+            <div data-glow class="w-full h-80 rounded-2xl relative grid grid-rows-[1fr_auto] shadow-[0_1rem_2rem_-1rem_black] p-6 gap-4 backdrop-blur-[5px] hover:scale-105 transition-transform duration-300 animate-pulse"
+                 style="--base: 30; --spread: 200; --radius: 16; --border: 3; --backdrop: hsl(0 0% 60% / 0.12); --backup-border: var(--backdrop); --size: 200; --outer: 1; --saturation: 100; --lightness: 70; --bg-spot-opacity: 0.15; --border-spot-opacity: 1; --border-light-opacity: 1; --border-size: calc(var(--border, 2) * 1px); --spotlight-size: calc(var(--size, 150) * 1px); --hue: calc(var(--base) + (var(--xp, 0) * var(--spread, 0))); background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.15)), transparent); background-color: var(--backdrop, transparent); background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size))); background-position: 50% 50%; background-attachment: fixed; border: var(--border-size) solid var(--backup-border); position: relative; touch-action: none; cursor: pointer;">
+                <div data-glow></div>
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🔥</div>
+                    <h3 class="text-orange-400 text-xl font-bold mb-2">Hot Deal</h3>
+                    <p class="text-gray-300 text-sm">Limited time offer with pulse effect</p>
+                    <div class="mt-4">
+                        <span class="bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full text-xs">50% OFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <p class="text-gray-400 mb-4">Move your mouse around to see the interactive glow effects!</p>
+            <p class="text-cyan-400 text-sm">✨ Enhanced GlowCard with dynamic colors, animations, and hover effects ✨</p>
+        </div>
+    </div>
+    
+    <script>
+        // Mouse tracking for glow effect
+        const syncPointer = (e) => {
+            const { clientX: x, clientY: y } = e;
+            document.querySelectorAll('[data-glow]').forEach(card => {
+                card.style.setProperty('--x', x.toFixed(2));
+                card.style.setProperty('--xp', (x / window.innerWidth).toFixed(2));
+                card.style.setProperty('--y', y.toFixed(2));
+                card.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
+            });
+        };
+        
+        document.addEventListener('pointermove', syncPointer);
+        
+        // Add click handlers
+        document.querySelectorAll('[data-glow]').forEach(card => {
+            card.addEventListener('click', () => {
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "name": "giftpal",
   "builds": [
     {
-      "src": "giftpal-app/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "giftpal-app/dist"

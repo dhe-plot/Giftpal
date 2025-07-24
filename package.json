@@ -10,6 +10,7 @@
     "sync:bidirectional": "node sync-apps.js bidirectional",
     "dev:giftpal": "cd giftpal-app && npm run dev",
     "dev:mr-gift": "cd mr-gift-app && npm run dev",
+    "build": "cd giftpal-app && npm install && npm run build",
     "build:giftpal": "cd giftpal-app && npm run build",
     "build:mr-gift": "cd mr-gift-app && npm run build",
     "install:all": "cd giftpal-app && npm install && cd ../mr-gift-app && npm install",
