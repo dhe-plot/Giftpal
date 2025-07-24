@@ -221,7 +221,10 @@ const HomeScreen = ({ navigation }) => {
           {/* Featured Stories Header */}
           <View style={styles.storiesHeader}>
             <Text style={styles.featuredTitle}>Featured Stories</Text>
-            <TouchableOpacity style={styles.shareStoryButton}>
+            <TouchableOpacity
+              style={styles.shareStoryButton}
+              onPress={() => navigation.navigate('ShareStory')}
+            >
               <Text style={styles.addIcon}>+</Text>
               <Text style={styles.shareStoryText}>Share Your Story</Text>
             </TouchableOpacity>
