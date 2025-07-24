@@ -6,7 +6,7 @@
       "src": "giftpal-app/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "giftpal-app/dist"
       }
     }
   ],
