@@ -1,5 +1,6 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 // Import pages
 import About from './About'
@@ -13,8 +14,14 @@ import SellerProfile from './SellerProfile'
 import HomePage from './HomePage'
 
 // Import the floating chatbot
-import SimpleChatbot from './components/ui/simple-chatbot'
+// SimpleChatbot removed - using ChatSystem in HomePage for top-right messages
 import ChatbotDemo from './components/ui/chatbot-demo'
+
+// Import Chat System
+
+
+// Import Splash Screen
+import SplashScreen from './components/ui/SplashScreen'
 
 // Import GlowCard demo
 import { Default as GlowCardDemo } from './components/ui/demo'
@@ -37,8 +44,54 @@ import { TestimonialsDemo, SellerTestimonialsDemo, UserTestimonialsDemo } from '
 // Import Buyer Dashboard
 import BuyerDashboard from './BuyerDashboard'
 
+// Import Seller Onboarding
+import SellerOnboarding from './components/seller/SellerOnboarding'
+
+// Import Messages Page
+import MessagesPage from './MessagesPage'
+
+// Import Occasions and Recipients Pages
+import OccasionsPage from './OccasionsPage'
+import RecipientsPage from './RecipientsPage'
+
+// Import New Feature Components
+import ReminderSystem from './components/reminders/ReminderSystem'
+import GiftHistory from './components/history/GiftHistory'
+import GiftSuggestionEngine from './components/ai/GiftSuggestionEngine'
+import FollowingSystem from './components/social/FollowingSystem'
+import OccasionCalendar from './components/calendar/OccasionCalendar'
+import PWAInstallPrompt from './components/pwa/PWAInstallPrompt'
+
+// Import API Test
+import APITest from './components/test/APITest'
+import SellerFlowTest from './components/test/SellerFlowTest'
+import BackendTest from './components/test/BackendTest'
+import EditableProfile from './components/profile/EditableProfile'
+
 // Main App component with routing
 function App() {
+  const [showSplash, setShowSplash] = useState(true)
+
+  // Check if user has seen splash screen recently (within 5 minutes for development)
+  useEffect(() => {
+    const lastSplashTime = localStorage.getItem('giftpal_last_splash')
+    const now = Date.now()
+    const fiveMinutes = 5 * 60 * 1000 // Show splash more frequently during development
+
+    if (lastSplashTime && (now - parseInt(lastSplashTime)) < fiveMinutes) {
+      setShowSplash(false)
+    }
+  }, [])
+
+  const handleSplashComplete = () => {
+    localStorage.setItem('giftpal_last_splash', Date.now().toString())
+    setShowSplash(false)
+  }
+
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />
+  }
+
   return (
     <>
       <Routes>
@@ -60,10 +113,25 @@ function App() {
         <Route path="/seller-testimonials" element={<SellerTestimonialsDemo />} />
         <Route path="/user-testimonials" element={<UserTestimonialsDemo />} />
         <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+        <Route path="/seller-onboarding" element={<SellerOnboarding />} />
+        <Route path="/api-test" element={<APITest />} />
+        <Route path="/seller-flow-test" element={<SellerFlowTest />} />
+        <Route path="/backend-test" element={<BackendTest />} />
+        <Route path="/profile" element={<EditableProfile />} />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/occasions" element={<OccasionsPage />} />
+        <Route path="/recipients" element={<RecipientsPage />} />
+        <Route path="/reminders" element={<ReminderSystem />} />
+        <Route path="/gift-history" element={<GiftHistory />} />
+        <Route path="/ai-suggestions" element={<GiftSuggestionEngine />} />
+        <Route path="/following" element={<FollowingSystem />} />
+        <Route path="/calendar" element={<OccasionCalendar />} />
       </Routes>
 
-      {/* Global Floating Chatbot - Available on all pages */}
-      <SimpleChatbot />
+      {/* Note: ChatSystem (Messages) is handled in HomePage.jsx for top-right positioning */}
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </>
   )
 }

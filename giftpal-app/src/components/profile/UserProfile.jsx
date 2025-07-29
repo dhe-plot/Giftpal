@@ -114,9 +114,7 @@ export function UserProfile({ user, isOpen, onClose, onFollow, isFollowing = fal
               <div className="preference-item">
                 <strong>Favorite Categories:</strong> Tech & Gadgets, Home & Garden, Books
               </div>
-              <div className="preference-item">
-                <strong>Budget Range:</strong> $25 - $100
-              </div>
+
               <div className="preference-item">
                 <strong>Gifting Style:</strong> Thoughtful & Personal
               </div>

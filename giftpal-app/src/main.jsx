@@ -6,6 +6,7 @@ import './index.css'
 import App from './App.jsx'
 import { LoadingProvider } from './providers/LoadingProvider.jsx'
 import { AuthProvider } from './providers/AuthProvider.jsx'
+import { SellerProvider } from './providers/SellerProvider.jsx'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -15,6 +16,19 @@ console.log('Environment:', import.meta.env.MODE)
 
 if (!PUBLISHABLE_KEY) {
   console.warn('Missing Clerk Publishable Key - running in demo mode')
+}
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration)
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError)
+      })
+  })
 }
 
 // Error boundary component
@@ -57,9 +71,11 @@ createRoot(root).render(
     <BrowserRouter>
       <ErrorBoundary>
         <AuthProvider>
-          <LoadingProvider>
-            <App />
-          </LoadingProvider>
+          <SellerProvider>
+            <LoadingProvider>
+              <App />
+            </LoadingProvider>
+          </SellerProvider>
         </AuthProvider>
       </ErrorBoundary>
     </BrowserRouter>

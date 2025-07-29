@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import giftpalLogo from './assets/giftpal_logo.png'
 import { useLoading } from './providers/LoadingProvider'
 import { useAuth } from './providers/AuthProvider'
-import { Menu, X, Plus, Home, Search, Building2, User, Filter, Heart, ShoppingCart, Gift, Star, TrendingUp } from 'lucide-react'
+import { Menu, X, Plus, Home, Search, Building2, User, Filter, Heart, ShoppingCart, Gift, Star, TrendingUp, Camera, MessageCircle } from 'lucide-react'
 import { InstagramStoryModal } from './components/stories/InstagramStoryModal'
+import CartModal from './components/cart/CartModal'
+import MessagesModal from './components/chat/MessagesModal'
 
 
 // Sample data for stories
@@ -432,6 +434,8 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false)
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   // Buyer-focused state
   const [searchTerm, setSearchTerm] = useState('')
@@ -546,11 +550,19 @@ export default function HomePage() {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: none !important; }
           .desktop-signin { display: flex !important; }
+          .left-sidebar { display: none !important; }
+          .right-sidebar { display: none !important; }
+          .desktop-layout {
+            flex-direction: column !important;
+            padding: 0 !important;
+            gap: 0 !important;
+          }
           .main-content {
             flex-direction: column !important;
             padding: 1rem !important;
             gap: 1rem !important;
             padding-bottom: 100px !important;
+            max-width: 100% !important;
           }
           .sidebar {
             width: 100% !important;
@@ -579,11 +591,37 @@ export default function HomePage() {
           .story-actions {
             justify-content: space-around !important;
           }
+          .mobile-only { display: block !important; }
         }
 
         @media (min-width: 769px) {
           .mobile-menu-btn { display: none !important; }
           .desktop-signin { display: block !important; }
+          .desktop-layout {
+            display: flex !important;
+            max-width: 1400px !important;
+            margin: 0 auto !important;
+            gap: 2rem !important;
+            padding: 2rem !important;
+          }
+          .left-sidebar {
+            display: block !important;
+            width: 280px !important;
+            flex-shrink: 0 !important;
+          }
+          .main-content {
+            flex: 1 !important;
+            max-width: 600px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .right-sidebar {
+            display: block !important;
+            width: 280px !important;
+            flex-shrink: 0 !important;
+          }
+          .mobile-only { display: none !important; }
+          .bottom-nav { display: none !important; }
         }
       `}</style>
 
@@ -629,6 +667,7 @@ export default function HomePage() {
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           {/* Cart Button */}
           <button
+            onClick={() => setIsCartOpen(true)}
             style={{
               background: 'transparent',
               border: `1px solid ${theme.border}`,
@@ -671,6 +710,52 @@ export default function HomePage() {
                 {cart.length}
               </span>
             )}
+          </button>
+
+          {/* Messages Button */}
+          <button
+            onClick={() => setIsChatOpen(true)}
+            style={{
+              background: 'transparent',
+              border: `1px solid ${theme.border}`,
+              borderRadius: '8px',
+              padding: '0.5rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: theme.textPrimary,
+              transition: 'all 0.2s ease',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.borderColor = theme.accent;
+              e.target.style.color = theme.accent;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.borderColor = theme.border;
+              e.target.style.color = theme.textPrimary;
+            }}
+          >
+            <MessageCircle size={20} />
+            {/* Unread messages badge */}
+            <span style={{
+              position: 'absolute',
+              top: '-5px',
+              right: '-5px',
+              background: '#ff4757',
+              color: 'white',
+              borderRadius: '50%',
+              width: '18px',
+              height: '18px',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              3
+            </span>
           </button>
 
           {/* Wishlist Button */}
@@ -743,29 +828,71 @@ export default function HomePage() {
             ☀️
           </button>
 
-          {/* Sign In Button */}
-          <Link to="/sign-in" className="desktop-signin">
-            <button style={{
-              background: '#10b981',
-              color: 'white',
-              border: 'none',
-              padding: '0.5rem 1.5rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: '500',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-1px)';
-              e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
-            }}>
-              Sign In
-            </button>
-          </Link>
+          {/* User Profile or Sign In */}
+          {isAuthenticated && user ? (
+            <Link to="/profile" className="desktop-signin">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.5rem 1rem',
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid #10b981',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.background = 'rgba(16, 185, 129, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.background = 'rgba(16, 185, 129, 0.1)';
+              }}>
+                <img
+                  src={user.avatar || 'https://randomuser.me/api/portraits/men/1.jpg'}
+                  alt={user.name}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    objectFit: 'cover'
+                  }}
+                />
+                <span style={{
+                  color: '#10b981',
+                  fontWeight: '500',
+                  fontSize: '0.9rem'
+                }}>
+                  {user.firstName || user.name || 'User'}
+                </span>
+              </div>
+            </Link>
+          ) : (
+            <Link to="/sign-in" className="desktop-signin">
+              <button style={{
+                background: '#10b981',
+                color: 'white',
+                border: 'none',
+                padding: '0.5rem 1.5rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }}>
+                Sign In
+              </button>
+            </Link>
+          )}
 
 
         </div>
@@ -840,13 +967,244 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Main Content */}
-      <main className="main-content" style={{
-        width: '100%',
-        maxWidth: '500px',
+      {/* Desktop Layout Container */}
+      <div className="desktop-layout" style={{
+        display: 'flex',
+        maxWidth: '1400px',
         margin: '0 auto',
-        padding: '2rem 0.5rem'
+        gap: '2rem',
+        padding: '2rem'
       }}>
+
+        {/* Left Sidebar - Explore Menu (Desktop Only) */}
+        <aside className="left-sidebar" style={{
+          width: '280px',
+          flexShrink: 0,
+          display: 'none'
+        }}>
+          <div style={{
+            background: theme.cardBackground,
+            borderRadius: '16px',
+            padding: '1.5rem',
+            border: `1px solid ${theme.border}`,
+            position: 'sticky',
+            top: '100px'
+          }}>
+            <h3 style={{
+              marginBottom: '1.5rem',
+              color: theme.accent,
+              fontSize: '1.2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              🔍 Explore
+            </h3>
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <Link to="/occasions" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>🎉</span> Occasions
+              </Link>
+              <Link to="/recipients" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>👥</span> Recipients
+              </Link>
+
+              <Link to="/reminders" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>🔔</span> Reminders
+              </Link>
+
+              <Link to="/calendar" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>📅</span> Calendar
+              </Link>
+
+              <Link to="/following" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>👥</span> Following
+              </Link>
+
+              <Link to="/ai-suggestions" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>🤖</span> AI Suggestions
+              </Link>
+
+              <Link to="/gift-history" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>📊</span> Gift History
+              </Link>
+              <Link to="/testimonials" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>⭐</span> Success Stories
+              </Link>
+              <Link to="/brands" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                textDecoration: 'none',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease',
+                fontSize: '0.95rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                e.target.style.color = theme.accent;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.color = theme.textSecondary;
+              }}>
+                <span>🏪</span> Brands
+              </Link>
+            </nav>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="main-content" style={{
+          flex: 1,
+          maxWidth: '600px',
+          margin: '0'
+        }}>
         {/* Buyer-Focused Search & Discovery Section */}
         <section style={{ marginBottom: '3rem' }}>
           {/* Quick Search Bar */}
@@ -1437,6 +1795,163 @@ export default function HomePage() {
 
       </main>
 
+        {/* Right Sidebar - Featured Content (Desktop Only) */}
+        <aside className="right-sidebar" style={{
+          width: '280px',
+          flexShrink: 0,
+          display: 'none'
+        }}>
+          <div style={{
+            background: theme.cardBackground,
+            borderRadius: '16px',
+            padding: '1.5rem',
+            border: `1px solid ${theme.border}`,
+            position: 'sticky',
+            top: '100px',
+            marginBottom: '2rem'
+          }}>
+            <h3 style={{
+              marginBottom: '1.5rem',
+              color: theme.accent,
+              fontSize: '1.2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              ⭐ Featured
+            </h3>
+
+            {/* Top Gifters */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{
+                color: theme.textPrimary,
+                fontSize: '1rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                🏆 Top Gifters
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {sampleStories.slice(0, 3).map((story, index) => (
+                  <div key={story.id} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.5rem',
+                    borderRadius: '8px',
+                    transition: 'background 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'transparent';
+                  }}>
+                    <img
+                      src={story.user.avatar}
+                      alt={story.user.name}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        color: theme.textPrimary,
+                        fontSize: '0.9rem',
+                        fontWeight: 500
+                      }}>
+                        {story.user.name}
+                      </div>
+                      <div style={{
+                        color: theme.textSecondary,
+                        fontSize: '0.8rem'
+                      }}>
+                        {story.user.giftsGiven} gifts given
+                      </div>
+                    </div>
+                    <div style={{
+                      background: theme.accent,
+                      color: isDarkMode ? '#000' : '#fff',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '12px',
+                      fontSize: '0.7rem',
+                      fontWeight: 600
+                    }}>
+                      #{index + 1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <h4 style={{
+                color: theme.textPrimary,
+                fontSize: '1rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                🚀 Quick Actions
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <Link to="/seller-onboarding" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.8rem',
+                  color: theme.textSecondary,
+                  textDecoration: 'none',
+                  padding: '0.8rem',
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease',
+                  fontSize: '0.95rem'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                  e.target.style.color = theme.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = theme.textSecondary;
+                }}>
+                  <span>🏪</span> Become a Seller
+                </Link>
+                <Link to="/about" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.8rem',
+                  color: theme.textSecondary,
+                  textDecoration: 'none',
+                  padding: '0.8rem',
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease',
+                  fontSize: '0.95rem'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+                  e.target.style.color = theme.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = theme.textSecondary;
+                }}>
+                  <span>ℹ️</span> About GIFTPAL
+                </Link>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div> {/* End Desktop Layout Container */}
+
       {/* Load More Stories Section */}
       <div style={{
         textAlign: 'center',
@@ -1481,10 +1996,16 @@ export default function HomePage() {
         onSubmit={handleStorySubmit}
       />
 
+      {/* Cart Modal */}
+      <CartModal
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
+
 
 
       {/* Bottom Navigation Bar */}
-      <nav style={{
+      <nav className="mobile-only" style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
@@ -1518,7 +2039,7 @@ export default function HomePage() {
             <Home size={24} fill="currentColor" />
           </Link>
 
-          {/* Search */}
+          {/* Search/Explore */}
           <Link to="/gifts" style={{
             display: 'flex',
             flexDirection: 'column',
@@ -1532,7 +2053,7 @@ export default function HomePage() {
             <Search size={24} />
           </Link>
 
-          {/* Create/Plus */}
+          {/* Create/Camera - Instagram style */}
           <button
             onClick={() => setIsStoryModalOpen(true)}
             style={{
@@ -1541,8 +2062,8 @@ export default function HomePage() {
               alignItems: 'center',
               background: 'transparent',
               border: `2px solid ${theme.textSecondary}`,
-              borderRadius: '8px',
-              padding: '0.5rem',
+              borderRadius: '12px',
+              padding: '0.4rem',
               color: theme.textSecondary,
               cursor: 'pointer',
               transition: 'all 0.2s ease'
@@ -1558,22 +2079,96 @@ export default function HomePage() {
               e.target.style.color = theme.textSecondary;
             }}
           >
-            <Plus size={20} />
+            <Camera size={20} />
           </button>
 
-          {/* Trusted Brands */}
-          <Link to="/brands" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: theme.textSecondary,
-            transition: 'all 0.2s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}>
-            <Building2 size={24} />
-          </Link>
+          {/* Messages */}
+          <button
+            onClick={() => setIsChatOpen(true)}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              background: 'transparent',
+              border: `2px solid ${theme.textSecondary}`,
+              borderRadius: '12px',
+              padding: '0.4rem',
+              color: theme.textSecondary,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.1)';
+              e.target.style.borderColor = theme.accent;
+              e.target.style.color = theme.accent;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.borderColor = theme.textSecondary;
+              e.target.style.color = theme.textSecondary;
+            }}
+          >
+            <MessageCircle size={20} />
+            {/* Unread messages badge */}
+            <span style={{
+              position: 'absolute',
+              top: '-2px',
+              right: '-2px',
+              background: theme.accent,
+              color: isDarkMode ? '#000' : '#fff',
+              borderRadius: '50%',
+              width: '16px',
+              height: '16px',
+              fontSize: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold'
+            }}>
+              3
+            </span>
+          </button>
+
+          {/* Shopping Cart */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              background: 'transparent',
+              border: 'none',
+              color: theme.textSecondary,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            <ShoppingCart size={24} />
+            {/* Cart badge */}
+            {cart.length > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-2px',
+                right: '-2px',
+                background: theme.accent,
+                color: isDarkMode ? '#000' : '#fff',
+                borderRadius: '50%',
+                width: '16px',
+                height: '16px',
+                fontSize: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold'
+              }}>
+                {cart.length}
+              </span>
+            )}
+          </button>
 
           {/* Profile */}
           <Link to={isAuthenticated ? "/profile" : "/sign-in"} style={{
@@ -1738,7 +2333,7 @@ export default function HomePage() {
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <button
               onClick={() => {
-                // Show cart/wishlist summary
+                setIsCartOpen(true)
                 setIsRightMenuOpen(false)
               }}
               style={{
@@ -1785,6 +2380,55 @@ export default function HomePage() {
                   {cart.length}
                 </span>
               )}
+            </button>
+
+            <button
+              onClick={() => {
+                setIsChatOpen(true)
+                setIsRightMenuOpen(false)
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                color: theme.textSecondary,
+                background: 'transparent',
+                border: 'none',
+                textAlign: 'left',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                transition: 'background 0.2s',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = isDarkMode ? 'rgba(78, 205, 196, 0.1)' : 'rgba(78, 205, 196, 0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'transparent';
+              }}
+            >
+              <span>💬</span>
+              <div style={{ flex: 1 }}>
+                <div>Messages</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>
+                  3 unread
+                </div>
+              </div>
+              <span style={{
+                background: '#ff4757',
+                color: 'white',
+                borderRadius: '50%',
+                width: '20px',
+                height: '20px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                3
+              </span>
             </button>
 
             <button
@@ -2243,6 +2887,12 @@ export default function HomePage() {
           }}
         />
       )}
+
+      {/* Chat System */}
+      <MessagesModal
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+      />
     </div>
     </>
   )

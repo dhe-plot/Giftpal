@@ -4,6 +4,7 @@ import { Plus, Camera, Video, Image } from 'lucide-react'
 export function FloatingStoryButton({ onClick }) {
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,14 +16,32 @@ export function FloatingStoryButton({ onClick }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Handle window resize for responsive positioning
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Function to get responsive positioning
+  const getResponsivePosition = () => {
+    const isMobile = windowSize.width <= 768
+    return {
+      bottom: isMobile ? '6rem' : '2rem', // 6rem = 96px to avoid bottom nav
+      right: '2rem'
+    }
+  }
+
   if (!isVisible) return null
 
   return (
     <div
       style={{
         position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
+        ...getResponsivePosition(),
         zIndex: 999,
         display: 'flex',
         flexDirection: 'column',

@@ -38,7 +38,7 @@ const ProfilePage = () => {
         email: user?.email || '',
         interests: user?.preferences?.interests || ['Electronics', 'Fashion', 'Books', 'Home & Garden'],
         giftingStyle: user?.preferences?.giftingStyle || 'thoughtful',
-        budgetRange: user?.preferences?.budget || '$50 - $100',
+
         occasions: user?.preferences?.occasions || ['Birthday', 'Anniversary', 'Holiday'],
         followedUsers: [1, 2],
         stats: {
@@ -66,7 +66,6 @@ const ProfilePage = () => {
       preferences: {
         interests: profile.interests,
         giftingStyle: profile.giftingStyle,
-        budget: profile.budgetRange,
         occasions: profile.occasions
       }
     });
@@ -227,14 +226,7 @@ const ProfilePage = () => {
                 {profile.giftingStyle.replace(/([A-Z])/g, ' $1')}
               </div>
             </div>
-            <div>
-              <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.8rem', marginBottom: '0.25rem' }}>
-                Budget Range
-              </div>
-              <div style={{ color: '#fff', fontWeight: '500' }}>
-                {profile.budgetRange}
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

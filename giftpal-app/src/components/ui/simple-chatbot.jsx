@@ -23,8 +23,56 @@ const SimpleChatbot = () => {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [messageCount, setMessageCount] = useState(0)
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight })
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const messagesEndRef = useRef(null)
   const fileInputRef = useRef(null)
+  const chatbotRef = useRef(null)
+
+  // Function to get responsive positioning
+  const getResponsivePosition = () => {
+    const isMobile = windowSize.width <= 768
+    return {
+      bottom: isMobile ? '90px' : '24px',
+      right: isMobile ? '16px' : '24px'
+    }
+  }
+
+  // Function to get responsive chat window positioning
+  const getChatWindowPosition = () => {
+    const isMobile = windowSize.width <= 768
+
+    if (isMobile) {
+      return {
+        bottom: '90px',
+        right: '16px',
+        left: '16px',
+        width: 'calc(100vw - 32px)',
+        height: 'calc(100vh - 180px)'
+      }
+    }
+
+    // Position chat window near the draggable button on desktop
+    const windowWidth = 384
+    const windowHeight = 600
+
+    // Calculate position relative to button
+    let windowX = position.x - windowWidth + 60 // Align right edge with button
+    let windowY = position.y - windowHeight - 10 // Position above button
+
+    // Constrain to viewport
+    windowX = Math.max(16, Math.min(windowX, windowSize.width - windowWidth - 16))
+    windowY = Math.max(16, Math.min(windowY, windowSize.height - windowHeight - 16))
+
+    return {
+      left: `${windowX}px`,
+      top: `${windowY}px`,
+      width: `${windowWidth}px`,
+      height: `${windowHeight}px`
+    }
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -33,6 +81,105 @@ const SimpleChatbot = () => {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Handle window resize for responsive positioning
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Initialize position based on screen size
+  useEffect(() => {
+    const isMobile = windowSize.width <= 768
+    const initialX = windowSize.width - (isMobile ? 76 : 84) // 60px button + 16px margin
+    const initialY = windowSize.height - (isMobile ? 150 : 84) // Above bottom nav on mobile
+    setPosition({ x: initialX, y: initialY })
+  }, [windowSize])
+
+  // Drag handlers
+  const handleMouseDown = (e) => {
+    if (isOpen) return // Don't drag when chat is open
+    setIsDragging(true)
+    const rect = chatbotRef.current.getBoundingClientRect()
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return
+
+    const newX = e.clientX - dragOffset.x
+    const newY = e.clientY - dragOffset.y
+
+    // Constrain to viewport
+    const maxX = windowSize.width - 60 // button width
+    const maxY = windowSize.height - 60 // button height
+
+    setPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // Touch handlers for mobile
+  const handleTouchStart = (e) => {
+    if (isOpen) return
+    setIsDragging(true)
+    const touch = e.touches[0]
+    const rect = chatbotRef.current.getBoundingClientRect()
+    setDragOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
+    })
+  }
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return
+    e.preventDefault()
+
+    const touch = e.touches[0]
+    const newX = touch.clientX - dragOffset.x
+    const newY = touch.clientY - dragOffset.y
+
+    const maxX = windowSize.width - 60
+    const maxY = windowSize.height - 60
+
+    setPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
+    })
+  }
+
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+  }
+
+  // Add global event listeners for drag
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.addEventListener('touchmove', handleTouchMove, { passive: false })
+      document.addEventListener('touchend', handleTouchEnd)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isDragging, dragOffset])
 
   const addMessage = (type, content, options = null, imageUrl = null) => {
     const newMessage = {
@@ -651,19 +798,31 @@ const SimpleChatbot = () => {
     <div>
       {/* Chat Button */}
       <div
-        style={{ 
+        ref={chatbotRef}
+        style={{
           position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 9999
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          zIndex: 9999,
+          cursor: isDragging ? 'grabbing' : (isOpen ? 'pointer' : 'grab'),
+          userSelect: 'none',
+          touchAction: 'none'
         }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={(e) => {
+            if (!isDragging) {
+              setIsOpen(true)
+            }
+          }}
           className="chatbot-button"
           style={{
             display: isOpen ? 'none' : 'flex',
-            background: 'linear-gradient(135deg, #4ecdc4 0%, #ff6347 100%)',
+            background: isDragging
+              ? 'linear-gradient(135deg, #45b7aa 0%, #e55347 100%)'
+              : 'linear-gradient(135deg, #4ecdc4 0%, #ff6347 100%)',
             color: 'white',
             border: 'none',
             borderRadius: '50%',
@@ -671,9 +830,14 @@ const SimpleChatbot = () => {
             height: '60px',
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 8px 32px rgba(78, 205, 196, 0.4)',
-            fontSize: '24px'
+            cursor: isDragging ? 'grabbing' : 'grab',
+            boxShadow: isDragging
+              ? '0 12px 40px rgba(78, 205, 196, 0.6)'
+              : '0 8px 32px rgba(78, 205, 196, 0.4)',
+            fontSize: '24px',
+            transform: isDragging ? 'scale(1.1)' : 'scale(1)',
+            transition: isDragging ? 'none' : 'all 0.2s ease',
+            pointerEvents: 'auto'
           }}
         >
           <MessageCircle size={24} />
@@ -704,10 +868,7 @@ const SimpleChatbot = () => {
           className="chatbot-window"
           style={{
             position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            width: '384px',
-            height: '600px',
+            ...getChatWindowPosition(),
             background: '#1f2937',
             border: '1px solid #374151',
             borderRadius: '16px',

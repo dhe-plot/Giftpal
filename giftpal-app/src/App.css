@@ -1578,39 +1578,7 @@ footer {
   margin-top: 1.5rem;
 }
 
-.budget-section label {
-  display: block;
-  color: #fff;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-}
 
-.budget-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 0.5rem;
-}
-
-.budget-option {
-  padding: 0.75rem;
-  background: #2a2a2a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-.budget-option:hover {
-  border-color: #667eea;
-}
-
-.budget-option.selected {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
-}
 
 .follow-suggestions {
   display: flex;

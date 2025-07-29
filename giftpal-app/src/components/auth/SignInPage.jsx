@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Gift, Sparkles, Heart } from 'lucide-react'
 import { useAuth } from '../../providers/AuthProvider'
 import { useLoading } from '../../providers/LoadingProvider'
 import giftpalLogo from '../../assets/giftpal_logo.png'
@@ -240,10 +241,13 @@ export default function SignInPage() {
         className="signin-container"
         style={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+          background: `
+            linear-gradient(135deg, rgba(15, 15, 35, 0.85) 0%, rgba(26, 26, 46, 0.85) 50%, rgba(22, 33, 62, 0.85) 100%),
+            url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1920&h=1080&fit=crop&crop=center') center/cover
+          `,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           padding: '2rem',
           position: 'relative',
           overflow: 'hidden'
@@ -265,6 +269,46 @@ export default function SignInPage() {
           />
         ))}
 
+        {/* Enhanced Background Elements */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: `
+            radial-gradient(circle at 20% 80%, rgba(78, 205, 196, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 177, 238, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(94, 155, 255, 0.1) 0%, transparent 50%)
+          `
+        }} />
+
+        {/* Floating Gift Icons */}
+        <div style={{
+          position: 'absolute',
+          top: '15%',
+          left: '15%',
+          color: 'rgba(255, 177, 238, 0.3)',
+          animation: 'float 6s ease-in-out infinite'
+        }}>
+          <Gift size={40} />
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: '25%',
+          right: '20%',
+          color: 'rgba(78, 205, 196, 0.3)',
+          animation: 'float 8s ease-in-out infinite reverse'
+        }}>
+          <Sparkles size={35} />
+        </div>
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '10%',
+          color: 'rgba(94, 155, 255, 0.3)',
+          animation: 'float 7s ease-in-out infinite'
+        }}>
+          <Heart size={30} />
+        </div>
+
         {/* Gradient Orbs */}
         <div style={{
           position: 'absolute',
@@ -272,7 +316,7 @@ export default function SignInPage() {
           left: '10%',
           width: '300px',
           height: '300px',
-          background: 'radial-gradient(circle, rgba(78, 205, 196, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(78, 205, 196, 0.08) 0%, transparent 70%)',
           borderRadius: '50%',
           animation: 'float 8s ease-in-out infinite'
         }} />
@@ -287,76 +331,41 @@ export default function SignInPage() {
           animation: 'float 6s ease-in-out infinite reverse'
         }} />
         <div className="signin-card" style={{
-          borderRadius: '24px',
-          padding: '3rem',
+          borderRadius: '16px',
+          padding: '2.5rem',
           width: '100%',
           maxWidth: '420px',
-          boxShadow: '0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
           position: 'relative',
-          zIndex: 10
+          zIndex: 10,
+          marginLeft: '5%'
         }}>
           {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div style={{
-              position: 'relative',
-              display: 'inline-block',
-              marginBottom: '1.5rem'
-            }}>
-              <img
-                src={giftpalLogo}
-                alt="GIFTPAL Logo"
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  transition: 'transform 0.3s ease',
-                  cursor: 'pointer',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-                }}
-                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1) rotate(5deg)'}
-                onMouseLeave={(e) => e.target.style.transform = 'scale(1) rotate(0deg)'}
-              />
-              <div style={{
-                position: 'absolute',
-                top: '-5px',
-                right: '-5px',
-                width: '20px',
-                height: '20px',
-                background: 'linear-gradient(45deg, #4ecdc4, #44a08d)',
-                borderRadius: '50%',
-                animation: 'pulse 2s infinite'
-              }} />
-            </div>
+          <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
             <h1 style={{
               color: '#333',
-              fontSize: '2.5rem',
-              fontWeight: 800,
-              marginBottom: '0.5rem',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              fontSize: '1.8rem',
+              fontWeight: 700,
+              marginBottom: '0.5rem'
             }}>
-              GIFTPAL
+              Sign In
             </h1>
-            <p style={{
-              color: '#666',
-              fontSize: '1rem',
-              opacity: 0.8
-            }}>
-              ✨ One click to sign in or get started
-            </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{
-                display: 'block',
-                marginBottom: '0.8rem',
-                color: '#333',
-                fontWeight: 600,
-                fontSize: '0.95rem'
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '0.5rem',
+                color: '#555',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+                gap: '0.5rem'
               }}>
                 👤 Full Name <span style={{ color: '#999', fontWeight: 400 }}>(optional for new users)</span>
               </label>
@@ -372,20 +381,22 @@ export default function SignInPage() {
                   placeholder="Enter your full name"
                   style={{
                     width: '100%',
-                    padding: '1rem 1rem 1rem 3rem',
-                    border: `2px solid ${focusedField === 'name' ? '#4ecdc4' : '#e1e5e9'}`,
-                    borderRadius: '12px',
-                    fontSize: '1rem',
+                    padding: '0.9rem 0.9rem 0.9rem 2.5rem',
+                    border: `1px solid ${focusedField === 'name' ? '#4ecdc4' : '#ddd'}`,
+                    borderRadius: '8px',
+                    fontSize: '0.95rem',
                     outline: 'none',
-                    background: 'rgba(255, 255, 255, 0.9)'
+                    background: '#fff',
+                    transition: 'border-color 0.2s ease',
+                    boxSizing: 'border-box'
                   }}
                 />
                 <div style={{
                   position: 'absolute',
-                  left: '1rem',
+                  left: '0.8rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  fontSize: '1.2rem',
+                  fontSize: '1.1rem',
                   color: focusedField === 'name' ? '#4ecdc4' : '#999',
                   transition: 'color 0.3s ease'
                 }}>
@@ -396,11 +407,13 @@ export default function SignInPage() {
 
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{
-                display: 'block',
-                marginBottom: '0.8rem',
-                color: '#333',
-                fontWeight: 600,
-                fontSize: '0.95rem'
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '0.5rem',
+                color: '#555',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+                gap: '0.5rem'
               }}>
                 📧 Email Address
               </label>
@@ -417,20 +430,22 @@ export default function SignInPage() {
                   placeholder="Enter your email address"
                   style={{
                     width: '100%',
-                    padding: '1rem 1rem 1rem 3rem',
-                    border: `2px solid ${focusedField === 'email' ? '#4ecdc4' : '#e1e5e9'}`,
-                    borderRadius: '12px',
-                    fontSize: '1rem',
+                    padding: '0.9rem 0.9rem 0.9rem 2.5rem',
+                    border: `1px solid ${focusedField === 'email' ? '#4ecdc4' : '#ddd'}`,
+                    borderRadius: '8px',
+                    fontSize: '0.95rem',
                     outline: 'none',
-                    background: 'rgba(255, 255, 255, 0.9)'
+                    background: '#fff',
+                    transition: 'border-color 0.2s ease',
+                    boxSizing: 'border-box'
                   }}
                 />
                 <div style={{
                   position: 'absolute',
-                  left: '1rem',
+                  left: '0.8rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  fontSize: '1.2rem',
+                  fontSize: '1.1rem',
                   color: focusedField === 'email' ? '#4ecdc4' : '#999',
                   transition: 'color 0.3s ease'
                 }}>
@@ -438,13 +453,13 @@ export default function SignInPage() {
                 </div>
               </div>
               <div style={{
-                fontSize: '0.85rem',
+                fontSize: '0.8rem',
                 color: '#666',
-                marginTop: '0.8rem',
-                padding: '0.5rem',
-                background: 'rgba(78, 205, 196, 0.1)',
-                borderRadius: '8px',
-                border: '1px solid rgba(78, 205, 196, 0.2)'
+                marginTop: '0.5rem',
+                padding: '0.75rem',
+                background: 'rgba(78, 205, 196, 0.08)',
+                borderRadius: '6px',
+                border: '1px solid rgba(78, 205, 196, 0.15)'
               }}>
                 💡 Try "new@example.com" to see new user flow, or "user@example.com" for existing user
               </div>
@@ -452,11 +467,13 @@ export default function SignInPage() {
 
             <div style={{ marginBottom: '2rem' }}>
               <label style={{
-                display: 'block',
-                marginBottom: '0.8rem',
-                color: '#333',
-                fontWeight: 600,
-                fontSize: '0.95rem'
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '0.5rem',
+                color: '#555',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+                gap: '0.5rem'
               }}>
                 🔒 Password
               </label>
@@ -473,17 +490,19 @@ export default function SignInPage() {
                   placeholder="Enter your password"
                   style={{
                     width: '100%',
-                    padding: '1rem 1rem 1rem 3rem',
-                    border: `2px solid ${focusedField === 'password' ? '#4ecdc4' : '#e1e5e9'}`,
-                    borderRadius: '12px',
-                    fontSize: '1rem',
+                    padding: '0.9rem 0.9rem 0.9rem 2.5rem',
+                    border: `1px solid ${focusedField === 'password' ? '#4ecdc4' : '#ddd'}`,
+                    borderRadius: '8px',
+                    fontSize: '0.95rem',
                     outline: 'none',
-                    background: 'rgba(255, 255, 255, 0.9)'
+                    background: '#fff',
+                    transition: 'border-color 0.2s ease',
+                    boxSizing: 'border-box'
                   }}
                 />
                 <div style={{
                   position: 'absolute',
-                  left: '1rem',
+                  left: '0.8rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   fontSize: '1.2rem',
@@ -526,38 +545,37 @@ export default function SignInPage() {
                 background: 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)',
                 color: 'white',
                 border: 'none',
-                padding: '1.2rem',
-                borderRadius: '16px',
-                fontSize: '1.1rem',
-                fontWeight: 700,
+                padding: '1rem',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: 600,
                 cursor: 'pointer',
                 marginBottom: '1.5rem',
-                boxShadow: '0 8px 25px rgba(78, 205, 196, 0.3)',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                boxShadow: '0 4px 15px rgba(78, 205, 196, 0.25)',
+                transition: 'all 0.2s ease'
               }}
             >
-              <span style={{ fontSize: '1.3rem' }}>🚀</span>
-              Continue
+              <span style={{ fontSize: '1.1rem' }}>🚀</span>
+              CONTINUE
             </button>
         </form>
 
-          {/* Info Text */}
+          {/* Smart Sign-In Info */}
           <div style={{
             textAlign: 'center',
-            marginBottom: '1.5rem',
-            padding: '1.5rem',
-            background: 'linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(68, 160, 141, 0.1))',
-            borderRadius: '16px',
-            border: '1px solid rgba(78, 205, 196, 0.2)'
+            marginTop: '1rem',
+            padding: '1rem',
+            background: 'rgba(78, 205, 196, 0.05)',
+            borderRadius: '8px',
+            border: '1px solid rgba(78, 205, 196, 0.15)'
           }}>
             <p style={{
-              color: '#555',
-              fontSize: '0.95rem',
+              color: '#666',
+              fontSize: '0.85rem',
               lineHeight: 1.6,
               margin: 0
             }}>

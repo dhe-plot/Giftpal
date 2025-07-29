@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { authAPI, apiUtils } from '../services/api'
 
 const AuthContext = createContext()
 
@@ -29,15 +30,29 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    // Simulate checking for existing authentication
+    // Check for existing authentication and validate with backend
     const checkAuth = async () => {
       try {
-        // In a real app, you would check for stored tokens, validate with server, etc.
-        const storedAuth = localStorage.getItem('giftpal_auth')
-        if (storedAuth) {
-          const authData = JSON.parse(storedAuth)
-          setIsAuthenticated(true)
-          setUser(authData.user)
+        const token = localStorage.getItem('giftpal_token')
+        const storedUser = localStorage.getItem('giftpal_user')
+
+        if (token && storedUser) {
+          // Validate token with backend
+          try {
+            const response = await authAPI.getProfile()
+            if (response.success) {
+              setIsAuthenticated(true)
+              setUser(response.data.user)
+            } else {
+              // Token invalid, clear storage
+              localStorage.removeItem('giftpal_token')
+              localStorage.removeItem('giftpal_user')
+            }
+          } catch (error) {
+            // Token validation failed, clear storage
+            localStorage.removeItem('giftpal_token')
+            localStorage.removeItem('giftpal_user')
+          }
         }
       } catch (error) {
         console.error('Auth check failed:', error)
@@ -52,23 +67,26 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (email, password) => {
     try {
       setIsLoading(true)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      // Mock successful sign in
-      const authData = {
-        user: mockUser,
-        token: 'mock-jwt-token'
+      // Call backend login API
+      const response = await authAPI.login({ email, password })
+
+      if (response.success) {
+        // Store token and user data
+        localStorage.setItem('giftpal_token', response.data.accessToken)
+        localStorage.setItem('giftpal_user', JSON.stringify(response.data.user))
+
+        setIsAuthenticated(true)
+        setUser(response.data.user)
+
+        return { success: true, isNewUser: false, user: response.data.user }
+      } else {
+        return { success: false, error: response.message || 'Login failed' }
       }
-
-      localStorage.setItem('giftpal_auth', JSON.stringify(authData))
-      setIsAuthenticated(true)
-      setUser(mockUser)
-
-      return { success: true, isNewUser: false, user: mockUser }
     } catch (error) {
       console.error('Sign in failed:', error)
-      return { success: false, error: error.message }
+      const errorInfo = apiUtils.handleError(error)
+      return { success: false, error: errorInfo.message }
     } finally {
       setIsLoading(false)
     }
@@ -133,30 +151,26 @@ export const AuthProvider = ({ children }) => {
   const signUp = async (userData) => {
     try {
       setIsLoading(true)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      // Mock successful sign up
-      const newUser = {
-        ...mockUser,
-        name: userData.name || 'New User',
-        email: userData.email,
-        onboardingComplete: false
+      // Call backend register API
+      const response = await authAPI.register(userData)
+
+      if (response.success) {
+        // Store token and user data
+        localStorage.setItem('giftpal_token', response.data.accessToken)
+        localStorage.setItem('giftpal_user', JSON.stringify(response.data.user))
+
+        setIsAuthenticated(true)
+        setUser(response.data.user)
+
+        return { success: true, isNewUser: true, user: response.data.user }
+      } else {
+        return { success: false, error: response.message || 'Registration failed' }
       }
-
-      const authData = {
-        user: newUser,
-        token: 'mock-jwt-token'
-      }
-
-      localStorage.setItem('giftpal_auth', JSON.stringify(authData))
-      setIsAuthenticated(true)
-      setUser(newUser)
-
-      return { success: true, isNewUser: true, user: newUser }
     } catch (error) {
       console.error('Sign up failed:', error)
-      return { success: false, error: error.message }
+      const errorInfo = apiUtils.handleError(error)
+      return { success: false, error: errorInfo.message }
     } finally {
       setIsLoading(false)
     }
@@ -164,7 +178,19 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = async () => {
     try {
-      localStorage.removeItem('giftpal_auth')
+      // Call backend logout API
+      try {
+        await authAPI.logout()
+      } catch (error) {
+        // Continue with logout even if API call fails
+        console.warn('Logout API call failed:', error)
+      }
+
+      // Clear local storage
+      localStorage.removeItem('giftpal_token')
+      localStorage.removeItem('giftpal_user')
+      localStorage.removeItem('giftpal_refresh_token')
+
       setIsAuthenticated(false)
       setUser(null)
       return { success: true }
@@ -174,16 +200,26 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const updateUser = (userData) => {
-    const updatedUser = { ...user, ...userData }
-    setUser(updatedUser)
-    
-    // Update stored auth data
-    const storedAuth = localStorage.getItem('giftpal_auth')
-    if (storedAuth) {
-      const authData = JSON.parse(storedAuth)
-      authData.user = updatedUser
-      localStorage.setItem('giftpal_auth', JSON.stringify(authData))
+  const updateUser = async (userData) => {
+    try {
+      // Update user profile on backend
+      const response = await authAPI.updateProfile(userData)
+
+      if (response.success) {
+        const updatedUser = response.data.user
+        setUser(updatedUser)
+
+        // Update stored user data
+        localStorage.setItem('giftpal_user', JSON.stringify(updatedUser))
+
+        return { success: true, user: updatedUser }
+      } else {
+        return { success: false, error: response.message || 'Update failed' }
+      }
+    } catch (error) {
+      console.error('Update user failed:', error)
+      const errorInfo = apiUtils.handleError(error)
+      return { success: false, error: errorInfo.message }
     }
   }
 
