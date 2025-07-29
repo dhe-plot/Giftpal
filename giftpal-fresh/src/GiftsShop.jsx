@@ -10,8 +10,8 @@ const giftProducts = [
     name: 'Luxury Spa Set',
     desc: 'Indulge in relaxation with our premium spa collection',
     img: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
-    price: 49.99,
-    originalPrice: 69.99,
+    price: 19996,
+    originalPrice: 27996,
     lat: 40.7128, // New York
     lng: -74.0060,
     category: 'Beauty & Wellness',
@@ -29,8 +29,8 @@ const giftProducts = [
     name: 'Gourmet Chocolate Box',
     desc: 'A sweet treat for any special occasion',
     img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
-    price: 29.99,
-    originalPrice: 39.99,
+    price: 11996,
+    originalPrice: 15996,
     lat: 41.8781, // Chicago
     lng: -87.6298,
     category: 'Food & Beverage',
@@ -48,8 +48,8 @@ const giftProducts = [
     name: 'Personalized Jewelry',
     desc: 'Custom-made jewelry with a personal touch',
     img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
-    price: 89.99,
-    originalPrice: 129.99,
+    price: 35996,
+    originalPrice: 51996,
     lat: 34.0522, // Los Angeles
     lng: -118.2437,
     category: 'Jewelry & Accessories',
@@ -67,8 +67,8 @@ const giftProducts = [
     name: 'Handcrafted Leather Wallet',
     desc: 'A stylish and durable wallet for everyday use',
     img: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80',
-    price: 39.99,
-    originalPrice: 59.99,
+    price: 15996,
+    originalPrice: 23996,
     lat: 29.7604, // Houston
     lng: -95.3698,
     category: 'Fashion & Accessories',
@@ -86,8 +86,8 @@ const giftProducts = [
     name: 'Artisan Coffee Sampler',
     desc: 'A selection of premium coffees from around the world',
     img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-    price: 24.99,
-    originalPrice: 34.99,
+    price: 9996,
+    originalPrice: 13996,
     lat: 47.6062, // Seattle
     lng: -122.3321,
     category: 'Food & Beverage',
@@ -105,8 +105,8 @@ const giftProducts = [
     name: 'Cozy Knit Blanket',
     desc: 'A soft and warm blanket perfect for cold nights',
     img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
-    price: 59.99,
-    originalPrice: 79.99,
+    price: 23996,
+    originalPrice: 31996,
     lat: 39.7392, // Denver
     lng: -104.9903,
     category: 'Home & Living',
@@ -124,8 +124,8 @@ const giftProducts = [
     name: 'Tech Gadget Organizer',
     desc: 'Keep your gadgets organized and easily accessible',
     img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80',
-    price: 34.99,
-    originalPrice: 49.99,
+    price: 13996,
+    originalPrice: 19996,
     lat: 37.7749, // San Francisco
     lng: -122.4194,
     category: 'Technology',
@@ -143,8 +143,8 @@ const giftProducts = [
     name: 'Gourmet Cheese Selection',
     desc: 'A variety of fine cheeses for the connoisseur',
     img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80',
-    price: 44.99,
-    originalPrice: 59.99,
+    price: 17996,
+    originalPrice: 23996,
     lat: 42.3601, // Boston
     lng: -71.0589,
     category: 'Food & Beverage',
@@ -162,8 +162,8 @@ const giftProducts = [
     name: 'Scented Candle Set',
     desc: 'Fill your home with delightful aromas',
     img: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=400&q=80',
-    price: 19.99,
-    originalPrice: 29.99,
+    price: 7996,
+    originalPrice: 11996,
     lat: 25.7617, // Miami
     lng: -80.1918,
     category: 'Home & Living',
@@ -181,8 +181,8 @@ const giftProducts = [
     name: 'Fitness Tracker',
     desc: 'Track your health and fitness goals with style',
     img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80',
-    price: 79.99,
-    originalPrice: 99.99,
+    price: 31996,
+    originalPrice: 39996,
     lat: 33.4484, // Phoenix
     lng: -112.0740,
     category: 'Technology',
@@ -434,6 +434,11 @@ function ProductCard({ product, onAddToCart, onAddToWishlist, isInWishlist }) {
   );
 }
 
+// Helper function to format Naira prices
+const formatNairaPrice = (price) => {
+  return `₦${price.toLocaleString()}`;
+};
+
 export default function GiftsShop() {
   const [products, setProducts] = useState(giftProducts);
   const [userLocation, setUserLocation] = useState(null);
@@ -630,10 +635,10 @@ export default function GiftsShop() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-purple-400 font-bold">${product.price}</span>
+                        <span className="text-purple-400 font-bold">{formatNairaPrice(product.price)}</span>
                         {product.originalPrice > product.price && (
                           <span className="text-gray-400 text-sm line-through ml-1">
-                            ${product.originalPrice}
+                            {formatNairaPrice(product.originalPrice)}
                           </span>
                         )}
                       </div>

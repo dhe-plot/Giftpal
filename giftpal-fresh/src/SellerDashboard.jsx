@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const recentOrders = [
-  { id: "ORD-001", customer: "Emily Carter", product: "Luxury Spa Set", date: "2025-01-07", status: "Shipped", total: 89.99 },
-  { id: "ORD-002", customer: "David Lee", product: "Artisan Coffee Set", date: "2025-01-07", status: "Processing", total: 45.99 },
-  { id: "ORD-003", customer: "Olivia Chen", product: "Personalized Jewelry", date: "2025-01-06", status: "Delivered", total: 129.99 },
-  { id: "ORD-004", customer: "Ethan Ramirez", product: "Tech Organizer", date: "2025-01-06", status: "Shipped", total: 34.99 },
-  { id: "ORD-005", customer: "Sophia Patel", product: "Scented Candles", date: "2025-01-05", status: "Delivered", total: 19.99 },
+  { id: "ORD-001", customer: "Emily Carter", product: "Luxury Spa Set", date: "2025-01-07", status: "Shipped", total: 35996 },
+  { id: "ORD-002", customer: "David Lee", product: "Artisan Coffee Set", date: "2025-01-07", status: "Processing", total: 18396 },
+  { id: "ORD-003", customer: "Olivia Chen", product: "Personalized Jewelry", date: "2025-01-06", status: "Delivered", total: 51996 },
+  { id: "ORD-004", customer: "Ethan Ramirez", product: "Tech Organizer", date: "2025-01-06", status: "Shipped", total: 13996 },
+  { id: "ORD-005", customer: "Sophia Patel", product: "Scented Candles", date: "2025-01-05", status: "Delivered", total: 7996 },
 ];
 
 const products = [
   {
     id: 1,
     name: 'Luxury Spa Set',
-    price: 89.99,
+    price: 35996,
     stock: 15,
     sales: 45,
     image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=200&q=80',
@@ -22,7 +22,7 @@ const products = [
   {
     id: 2,
     name: 'Artisan Coffee Set',
-    price: 45.99,
+    price: 18396,
     stock: 8,
     sales: 32,
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80',
@@ -31,7 +31,7 @@ const products = [
   {
     id: 3,
     name: 'Personalized Jewelry',
-    price: 129.99,
+    price: 51996,
     stock: 0,
     sales: 28,
     image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=200&q=80',
@@ -51,7 +51,7 @@ export default function SellerDashboard() {
   });
 
   const sellerStats = {
-    totalSales: 15420.50,
+    totalSales: 6168200,
     totalOrders: 127,
     totalProducts: 23,
     rating: 4.8,
@@ -138,7 +138,7 @@ export default function SellerDashboard() {
             textAlign: 'center'
           }}>
             <div style={{ color: '#4ecdc4', fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-              ${sellerStats.totalSales.toLocaleString()}
+              ₦{sellerStats.totalSales.toLocaleString()}
             </div>
             <div style={{ color: '#b8a89c' }}>Total Sales</div>
           </div>
@@ -240,7 +240,7 @@ export default function SellerDashboard() {
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ color: '#4ecdc4', fontWeight: 600, marginBottom: '0.3rem' }}>
-                      ${order.total}
+                      ₦{order.total.toLocaleString()}
                     </div>
                     <div style={{
                       background: order.status === 'Delivered' ? '#4ecdc4' :
@@ -305,7 +305,7 @@ export default function SellerDashboard() {
                   />
                   <h3 style={{ color: '#4ecdc4', marginBottom: '0.5rem' }}>{product.name}</h3>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                    <span style={{ color: '#b8a89c' }}>Price: ${product.price}</span>
+                    <span style={{ color: '#b8a89c' }}>Price: ₦{product.price.toLocaleString()}</span>
                     <span style={{ color: '#b8a89c' }}>Stock: {product.stock}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -366,7 +366,7 @@ export default function SellerDashboard() {
                     Active Campaigns: <span style={{ color: '#4ecdc4', fontWeight: 600 }}>2</span>
                   </div>
                   <div style={{ color: '#b8a89c', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                    Monthly Spend: <span style={{ color: '#4ecdc4', fontWeight: 600 }}>$245.50</span>
+                    Monthly Spend: <span style={{ color: '#4ecdc4', fontWeight: 600 }}>₦98,200</span>
                   </div>
                   <div style={{ color: '#b8a89c', fontSize: '0.9rem' }}>
                     ROAS: <span style={{ color: '#4ecdc4', fontWeight: 600 }}>3.2x</span>
@@ -557,7 +557,7 @@ export default function SellerDashboard() {
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                   <div style={{ flex: 1 }}>
                     <label style={{ color: '#b8a89c', display: 'block', marginBottom: '0.5rem' }}>
-                      Price ($)
+                      Price (₦)
                     </label>
                     <input
                       type="number"

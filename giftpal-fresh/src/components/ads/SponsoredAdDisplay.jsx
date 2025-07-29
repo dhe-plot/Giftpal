@@ -9,7 +9,12 @@ import {
   Info
 } from 'lucide-react'
 
-const SponsoredAdDisplay = ({ 
+// Helper function to format Naira prices
+const formatNairaPrice = (price) => {
+  return `₦${price.toLocaleString()}`;
+};
+
+const SponsoredAdDisplay = ({
   placement = 'feed', // 'feed', 'sidebar', 'banner', 'product'
   category = 'all',
   maxAds = 1,
@@ -26,8 +31,8 @@ const SponsoredAdDisplay = ({
       title: 'Luxury Spa Gift Set - Perfect for Relaxation',
       description: 'Premium spa collection with organic ingredients. Perfect for birthdays, anniversaries, or self-care.',
       image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400',
-      price: 89.99,
-      originalPrice: 119.99,
+      price: 35996,
+      originalPrice: 47996,
       rating: 4.8,
       reviews: 234,
       seller: 'Zen Wellness Co.',
@@ -62,8 +67,8 @@ const SponsoredAdDisplay = ({
       title: 'Custom Photo Album - Preserve Your Memories',
       description: 'Create a personalized photo album with your favorite memories. Perfect gift for any occasion.',
       image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400',
-      price: 34.99,
-      originalPrice: 49.99,
+      price: 13996,
+      originalPrice: 19996,
       rating: 4.9,
       reviews: 156,
       seller: 'Memory Lane Crafts',
@@ -180,9 +185,9 @@ const SponsoredAdDisplay = ({
           <div className="flex items-center gap-2">
             {ad.price && (
               <>
-                <span className="text-lg font-bold text-purple-400">${ad.price}</span>
+                <span className="text-lg font-bold text-purple-400">{formatNairaPrice(ad.price)}</span>
                 {ad.originalPrice && ad.originalPrice > ad.price && (
-                  <span className="text-sm text-gray-400 line-through">${ad.originalPrice}</span>
+                  <span className="text-sm text-gray-400 line-through">{formatNairaPrice(ad.originalPrice)}</span>
                 )}
               </>
             )}

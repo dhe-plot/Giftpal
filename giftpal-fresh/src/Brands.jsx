@@ -21,21 +21,21 @@ const brands = [
         id: 1,
         name: 'Luxury Spa Set',
         image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=80',
-        price: '$89.99',
+        price: '₦35,996',
         rating: 4.8
       },
       {
         id: 2,
         name: 'Premium Jewelry Box',
         image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=200&q=80',
-        price: '$129.99',
+        price: '₦51,996',
         rating: 4.9
       },
       {
         id: 3,
         name: 'Artisan Leather Wallet',
         image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=200&q=80',
-        price: '$59.99',
+        price: '₦23,996',
         rating: 4.7
       }
     ],
@@ -60,14 +60,14 @@ const brands = [
         id: 4,
         name: 'Artisan Coffee Set',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80',
-        price: '$45.99',
+        price: '₦18,396',
         rating: 4.6
       },
       {
         id: 5,
         name: 'Gourmet Chocolate Box',
         image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=200&q=80',
-        price: '$34.99',
+        price: '₦13,996',
         rating: 4.8
       }
     ],
@@ -92,21 +92,21 @@ const brands = [
         id: 6,
         name: 'Smart Fitness Tracker',
         image: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=200&q=80',
-        price: '$79.99',
+        price: '₦31,996',
         rating: 4.9
       },
       {
         id: 7,
         name: 'Wireless Charging Pad',
         image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=200&q=80',
-        price: '$39.99',
+        price: '₦15,996',
         rating: 4.7
       },
       {
         id: 8,
         name: 'Bluetooth Speaker',
         image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=200&q=80',
-        price: '$89.99',
+        price: '₦35,996',
         rating: 4.8
       }
     ],
@@ -131,7 +131,7 @@ const brands = [
         id: 9,
         name: 'Bamboo Gift Set',
         image: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=200&q=80',
-        price: '$29.99',
+        price: '₦11,996',
         rating: 4.5
       }
     ],

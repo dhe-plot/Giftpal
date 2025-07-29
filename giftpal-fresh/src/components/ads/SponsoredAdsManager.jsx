@@ -27,8 +27,8 @@ const SponsoredAdsManager = () => {
       id: 1,
       name: 'Holiday Gift Collection',
       status: 'active',
-      budget: 500,
-      spent: 342.50,
+      budget: 200000,
+      spent: 137000,
       impressions: 12450,
       clicks: 234,
       conversions: 18,
@@ -44,8 +44,8 @@ const SponsoredAdsManager = () => {
       id: 2,
       name: 'Brand Awareness Campaign',
       status: 'paused',
-      budget: 300,
-      spent: 156.75,
+      budget: 120000,
+      spent: 62700,
       impressions: 8920,
       clicks: 145,
       conversions: 8,
@@ -137,7 +137,7 @@ const SponsoredAdsManager = () => {
                   <DollarSign className="w-5 h-5 text-green-400" />
                   <span className="text-gray-400 text-sm">Total Spent</span>
                 </div>
-                <div className="text-2xl font-bold text-white">${totalStats.totalSpent.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-white">₦{totalStats.totalSpent.toLocaleString()}</div>
               </div>
               
               <div className="bg-gray-800 p-4 rounded-xl">
@@ -175,7 +175,7 @@ const SponsoredAdsManager = () => {
                 </div>
                 <div>
                   <div className="text-gray-400 text-sm">Average CPC</div>
-                  <div className="text-xl font-bold text-green-400">${totalStats.avgCPC.toFixed(2)}</div>
+                  <div className="text-xl font-bold text-green-400">₦{totalStats.avgCPC.toFixed(2)}</div>
                 </div>
               </div>
             </div>
@@ -193,7 +193,7 @@ const SponsoredAdsManager = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      <div className="text-white font-medium">${campaign.spent.toFixed(2)}</div>
+                      <div className="text-white font-medium">₦{campaign.spent.toLocaleString()}</div>
                       <div className="text-sm text-gray-400">{campaign.clicks} clicks</div>
                     </div>
                   </div>
@@ -232,11 +232,11 @@ const SponsoredAdsManager = () => {
                 <div className="grid grid-cols-2 gap-4 mb-3">
                   <div>
                     <div className="text-gray-400 text-sm">Budget</div>
-                    <div className="text-white font-medium">${campaign.budget}</div>
+                    <div className="text-white font-medium">₦{campaign.budget.toLocaleString()}</div>
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">Spent</div>
-                    <div className="text-white font-medium">${campaign.spent}</div>
+                    <div className="text-white font-medium">₦{campaign.spent.toLocaleString()}</div>
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">CTR</div>

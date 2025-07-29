@@ -20,7 +20,7 @@ const CreateCampaign = ({ onClose, onSave }) => {
     name: '',
     objective: 'awareness',
     adType: 'product',
-    budget: 100,
+    budget: 40000,
     duration: 7,
     targetAudience: {
       ageRange: [25, 45],
@@ -243,12 +243,12 @@ const CreateCampaign = ({ onClose, onSave }) => {
                   type="number"
                   value={campaignData.budget}
                   onChange={(e) => updateCampaignData('budget', parseInt(e.target.value))}
-                  min="10"
-                  max="1000"
+                  min="4000"
+                  max="400000"
                   className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
-              <p className="text-sm text-gray-400 mt-1">Minimum $10/day</p>
+              <p className="text-sm text-gray-400 mt-1">Minimum ₦4,000/day</p>
             </div>
 
             <div>
@@ -273,7 +273,7 @@ const CreateCampaign = ({ onClose, onSave }) => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Daily Budget:</span>
-                  <span className="text-white">${campaignData.budget}</span>
+                  <span className="text-white">₦{campaignData.budget.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Duration:</span>
@@ -281,7 +281,7 @@ const CreateCampaign = ({ onClose, onSave }) => {
                 </div>
                 <div className="flex justify-between font-semibold">
                   <span className="text-gray-400">Total Budget:</span>
-                  <span className="text-purple-400">${campaignData.budget * campaignData.duration}</span>
+                  <span className="text-purple-400">₦{(campaignData.budget * campaignData.duration).toLocaleString()}</span>
                 </div>
               </div>
             </div>
