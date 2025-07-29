@@ -1,0 +1,312 @@
+/* Instagram-style Story Animations */
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.bounce-in {
+  animation: bounceIn 0.5s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+.story-modal-enter {
+  animation: storyModalEnter 0.4s ease-out;
+}
+
+.story-modal-exit {
+  animation: storyModalExit 0.3s ease-in;
+}
+
+.floating-button-enter {
+  animation: floatingButtonEnter 0.5s ease-out;
+}
+
+.media-preview-enter {
+  animation: mediaPreviewEnter 0.3s ease-out;
+}
+
+.tag-enter {
+  animation: tagEnter 0.2s ease-out;
+}
+
+.progress-fill {
+  animation: progressFill 0.5s ease-out;
+}
+
+/* Keyframe Definitions */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(78, 205, 196, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(78, 205, 196, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes storyModalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes storyModalExit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+}
+
+@keyframes floatingButtonEnter {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes mediaPreviewEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tagEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width);
+  }
+}
+
+/* Hover Effects */
+
+.story-type-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.media-upload-option:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.floating-story-option:hover {
+  transform: scale(1.1) translateX(-5px);
+}
+
+.tag-suggestion:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile Responsive Animations */
+
+@media (max-width: 768px) {
+  .story-modal-enter {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  .floating-button-enter {
+    animation: bounceIn 0.5s ease-out;
+  }
+}
+
+/* Loading States */
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.upload-progress {
+  background: linear-gradient(90deg, #4ecdc4, #45b7aa);
+  height: 4px;
+  border-radius: 2px;
+  animation: progressFill 0.5s ease-out;
+}
+
+/* Story Type Selection Animations */
+
+.story-type-story {
+  background: linear-gradient(135deg, #ff6347, #ff4500);
+}
+
+.story-type-reel {
+  background: linear-gradient(135deg, #ff1493, #dc143c);
+}
+
+.story-type-post {
+  background: linear-gradient(135deg, #4ecdc4, #45b7aa);
+}
+
+/* Interactive Elements */
+
+.interactive-button {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.interactive-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.interactive-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Success States */
+
+.success-animation {
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+    background: #4ecdc4;
+  }
+  50% {
+    transform: scale(1.1);
+    background: #45b7aa;
+  }
+  100% {
+    transform: scale(1);
+    background: #4ecdc4;
+  }
+}
+
+/* Error States */
+
+.error-shake {
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
