@@ -282,16 +282,16 @@ function ProductCard({ product, onAddToCart, onAddToWishlist, isInWishlist }) {
         {/* Price */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ color: '#22d3ee', fontWeight: 700, fontSize: '20px' }}>
-            ${product.price}
+            {formatNairaPrice(product.price)}
           </span>
           {product.originalPrice && (
             <span style={{ color: '#6b7280', textDecoration: 'line-through', fontSize: '14px' }}>
-              ${product.originalPrice}
+              {formatNairaPrice(product.originalPrice)}
             </span>
           )}
           {product.discount && (
             <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 500 }}>
-              Save ${(product.originalPrice - product.price).toFixed(2)}
+              Save {formatNairaPrice(product.originalPrice - product.price)}
             </span>
           )}
         </div>

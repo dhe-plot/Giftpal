@@ -32,7 +32,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Premium Whiskey Collection',
-      price: '$349',
+      price: '₦139,600',
       image: 'https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=300&q=80',
       tags: ['Premium', 'Spirits', 'Collector']
     },
@@ -59,7 +59,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Custom Engraved Watch',
-      price: '$299',
+      price: '₦119,600',
       image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=300&q=80',
       tags: ['Personalized', 'Luxury', 'Jewelry']
     },
@@ -86,7 +86,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Luxury Spa Collection',
-      price: '$89',
+      price: '₦35,600',
       image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80',
       tags: ['Spa', 'Relaxation', 'Self-care']
     },
@@ -113,7 +113,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Artisan Coffee Sampler',
-      price: '$45',
+      price: '₦18,000',
       image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80',
       tags: ['Coffee', 'Gourmet', 'Artisan']
     },
@@ -140,7 +140,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Handcrafted Diamond Necklace',
-      price: '$899',
+      price: '₦359,600',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80',
       tags: ['Handcrafted', 'Diamond', 'Luxury']
     },
@@ -167,7 +167,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Professional Leather Briefcase',
-      price: '$189',
+      price: '₦75,600',
       image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=300&q=80',
       tags: ['Professional', 'Leather', 'Career']
     },
@@ -194,7 +194,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Organic Baby Gift Set',
-      price: '$125',
+      price: '₦50,000',
       image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=300&q=80',
       tags: ['Organic', 'Baby', 'Eco-friendly']
     },
@@ -221,7 +221,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Artisan Candle Collection',
-      price: '$67',
+      price: '₦26,800',
       image: 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a?auto=format&fit=crop&w=300&q=80',
       tags: ['Artisan', 'Candles', 'Home']
     },
@@ -248,7 +248,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Personalized Desk Organizer',
-      price: '$78',
+      price: '₦31,200',
       image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=300&q=80',
       tags: ['Personalized', 'Office', 'Wood']
     },
@@ -275,7 +275,7 @@ const sampleStories = [
     },
     gift: {
       name: 'Handmade Chocolate Collection',
-      price: '$95',
+      price: '₦38,000',
       image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=300&q=80',
       tags: ['Handmade', 'Chocolate', 'Romantic']
     },
@@ -290,21 +290,21 @@ const featuredGifts = [
     id: 1,
     name: 'Luxury Spa Set',
     description: 'Premium spa collection for ultimate relaxation',
-    price: '$89.99',
+    price: '₦35,996',
     image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80'
   },
   {
     id: 2,
     name: 'Artisan Coffee Collection',
     description: 'Handpicked coffee beans from around the world',
-    price: '$45.99',
+    price: '₦18,396',
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80'
   },
   {
     id: 3,
     name: 'Personalized Jewelry',
     description: 'Custom-made jewelry with personal touch',
-    price: '$129.99',
+    price: '₦51,996',
     image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80'
   }
 ];
@@ -1342,7 +1342,7 @@ export default function HomePage() {
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <span style={{ color: theme.accent, fontSize: '0.9rem', fontWeight: 600 }}>
-                      ${gift.price}
+                      {gift.price}
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                       <Star size={12} style={{ color: '#ffd700', fill: '#ffd700' }} />
@@ -1510,7 +1510,7 @@ export default function HomePage() {
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
                     <span style={{ color: theme.accent, fontSize: '1rem', fontWeight: 600 }}>
-                      ${gift.price}
+                      {gift.price}
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                       <Star size={12} style={{ color: '#ffd700', fill: '#ffd700' }} />

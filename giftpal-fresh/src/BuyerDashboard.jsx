@@ -8,12 +8,12 @@ const sampleOrders = [
     id: 'ORD-001',
     date: '2024-01-15',
     status: 'delivered',
-    total: 149.99,
+    total: 59996,
     items: [
       {
         name: 'Personalized Jewelry Box',
         image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80',
-        price: 149.99,
+        price: 59996,
         recipient: 'Sarah (Wife)'
       }
     ]
@@ -22,12 +22,12 @@ const sampleOrders = [
     id: 'ORD-002',
     date: '2024-01-10',
     status: 'shipped',
-    total: 89.99,
+    total: 35996,
     items: [
       {
         name: 'Artisan Coffee Set',
         image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=300&q=80',
-        price: 89.99,
+        price: 35996,
         recipient: 'Dad (Birthday)'
       }
     ]
@@ -38,8 +38,8 @@ const sampleWishlist = [
   {
     id: 1,
     name: 'Smart Home Starter Kit',
-    price: 299,
-    originalPrice: 399,
+    price: 119600,
+    originalPrice: 159600,
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&q=80',
     rating: 4.7,
     inStock: true,
@@ -48,14 +48,19 @@ const sampleWishlist = [
   {
     id: 2,
     name: 'Luxury Spa Collection',
-    price: 79,
-    originalPrice: 110,
+    price: 31600,
+    originalPrice: 44000,
     image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80',
     rating: 4.6,
     inStock: true,
     priceDropped: false
   }
 ]
+
+// Helper function to format Naira prices
+const formatNairaPrice = (price) => {
+  return `₦${price.toLocaleString()}`;
+};
 
 export default function BuyerDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -285,7 +290,7 @@ export default function BuyerDashboard() {
                       </div>
                       
                       <div style={{ fontWeight: 600, color: theme.accent }}>
-                        ${order.total}
+                        {formatNairaPrice(order.total)}
                       </div>
                     </div>
                   ))}
@@ -352,7 +357,7 @@ export default function BuyerDashboard() {
                         </div>
                         
                         <div style={{ fontWeight: 600, color: theme.accent, fontSize: '1.1rem' }}>
-                          ${item.price}
+                          {formatNairaPrice(item.price)}
                         </div>
                       </div>
                     ))}
@@ -370,7 +375,7 @@ export default function BuyerDashboard() {
                       </button>
                       
                       <div style={{ fontWeight: 700, fontSize: '1.2rem', color: theme.textPrimary }}>
-                        Total: ${order.total}
+                        Total: {formatNairaPrice(order.total)}
                       </div>
                     </div>
                   </div>
@@ -418,11 +423,11 @@ export default function BuyerDashboard() {
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                       <span style={{ color: theme.accent, fontSize: '1.2rem', fontWeight: 700 }}>
-                        ${item.price}
+                        {formatNairaPrice(item.price)}
                       </span>
                       {item.originalPrice > item.price && (
                         <span style={{ color: theme.textMuted, textDecoration: 'line-through', fontSize: '0.9rem' }}>
-                          ${item.originalPrice}
+                          {formatNairaPrice(item.originalPrice)}
                         </span>
                       )}
                     </div>
