@@ -5,7 +5,7 @@ import {
   Upload, 
   Target, 
   Calendar, 
-  DollarSign,
+  DollarSign as NairaSign,
   Eye,
   MousePointer,
   TrendingUp,
@@ -37,7 +37,7 @@ const CreateCampaign = ({ onClose, onSave }) => {
     },
     bidding: {
       strategy: 'automatic',
-      maxCPC: 2.00
+      maxCPC: 800.00
     }
   })
 
@@ -238,7 +238,7 @@ const CreateCampaign = ({ onClose, onSave }) => {
                 Daily Budget
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-bold">₦</span>
                 <input
                   type="number"
                   value={campaignData.budget}
