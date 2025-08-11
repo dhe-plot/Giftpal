@@ -1,695 +1,686 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { useSeller } from '../../providers/SellerProvider'
-import { useAuth } from '../../providers/AuthProvider'
-import { 
-  Building2, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  FileText, 
-  Upload, 
-  CheckCircle, 
-  AlertCircle,
+import {
+  Building2,
+  CheckCircle,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  DollarSign,
+  Users,
+  TrendingUp,
+  Star,
+  Package,
+  Globe
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-const SellerOnboarding = () => {
-  const navigate = useNavigate()
-  const { user } = useAuth()
-  const { registerAsSeller, isLoading } = useSeller()
-  
-  const [currentStep, setCurrentStep] = useState(1)
+const benefits = [
+  {
+    icon: '💰',
+    title: 'Competitive Commission',
+    description: 'Keep 85% of your sales revenue with our low commission structure',
+    highlight: '85% Revenue Share'
+  },
+  {
+    icon: '🌍',
+    title: 'Global Reach',
+    description: 'Access to customers worldwide looking for unique, thoughtful gifts',
+    highlight: '50K+ Active Buyers'
+  },
+  {
+    icon: '📈',
+    title: 'Marketing Support',
+    description: 'AI-powered recommendations and featured placements for your products',
+    highlight: 'AI-Powered Promotion'
+  },
+  {
+    icon: '🚀',
+    title: 'Easy Setup',
+    description: 'Get started in minutes with our streamlined onboarding process',
+    highlight: '24h Approval'
+  },
+  {
+    icon: '📊',
+    title: 'Analytics Dashboard',
+    description: 'Track your sales, customer insights, and performance metrics',
+    highlight: 'Real-time Analytics'
+  },
+  {
+    icon: '🛡️',
+    title: 'Secure Payments',
+    description: 'Fast, secure payments with fraud protection and dispute resolution',
+    highlight: 'Protected Transactions'
+  }
+]
+
+const steps = [
+  {
+    number: 1,
+    title: 'Create Account',
+    description: 'Sign up and verify your business information'
+  },
+  {
+    number: 2,
+    title: 'Add Products',
+    description: 'Upload your products with photos and descriptions'
+  },
+  {
+    number: 3,
+    title: 'Get Approved',
+    description: 'Our team reviews your application within 24 hours'
+  },
+  {
+    number: 4,
+    title: 'Start Selling',
+    description: 'Begin receiving orders and growing your business'
+  }
+]
+
+export default function SellerOnboarding() {
+  const [selectedTab, setSelectedTab] = useState('benefits')
+  const [showApplicationForm, setShowApplicationForm] = useState(false)
   const [formData, setFormData] = useState({
     businessName: '',
-    businessDescription: '',
+    email: '',
+    phone: '',
     businessType: '',
-    businessRegistrationNumber: '',
-    taxId: '',
-    websiteUrl: '',
-    businessAddress: {
-      street: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: 'United States'
-    },
-    businessPhone: '',
-    specializations: []
+    description: ''
   })
-  const [errors, setErrors] = useState({})
-  const [submitStatus, setSubmitStatus] = useState(null)
-  const [emailVerificationCode, setEmailVerificationCode] = useState('')
-  const [isEmailVerified, setIsEmailVerified] = useState(false)
-  const [verificationSent, setVerificationSent] = useState(false)
 
-  const businessTypes = [
-    'Individual/Sole Proprietorship',
-    'LLC (Limited Liability Company)',
-    'Corporation',
-    'Partnership',
-    'Non-Profit Organization',
-    'Other'
-  ]
-
-  const specializationOptions = [
-    'Handmade Crafts',
-    'Jewelry & Accessories',
-    'Home Decor',
-    'Art & Collectibles',
-    'Clothing & Fashion',
-    'Beauty & Personal Care',
-    'Food & Beverages',
-    'Electronics & Gadgets',
-    'Books & Media',
-    'Toys & Games',
-    'Sports & Outdoors',
-    'Automotive',
-    'Other'
-  ]
-
-  const handleInputChange = (field, value) => {
-    if (field.includes('.')) {
-      const [parent, child] = field.split('.')
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
-        }
-      }))
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }))
-    }
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: null
-      }))
-    }
+  const handleStartApplication = () => {
+    setShowApplicationForm(true)
   }
 
-  const handleSpecializationToggle = (specialization) => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    // Here you would typically send the data to your backend
+    alert('Application submitted successfully! We will review your application within 24 hours.')
+    setShowApplicationForm(false)
+    setFormData({
+      businessName: '',
+      email: '',
+      phone: '',
+      businessType: '',
+      description: ''
+    })
+  }
+
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      specializations: prev.specializations.includes(specialization)
-        ? prev.specializations.filter(s => s !== specialization)
-        : [...prev.specializations, specialization]
+      [field]: value
     }))
   }
 
-  const validateStep = (step) => {
-    const newErrors = {}
-
-    switch (step) {
-      case 1:
-        if (!formData.businessName.trim()) {
-          newErrors.businessName = 'Business name is required'
-        }
-        if (!formData.businessDescription.trim() || formData.businessDescription.length < 50) {
-          newErrors.businessDescription = 'Business description must be at least 50 characters'
-        }
-        if (!formData.businessType) {
-          newErrors.businessType = 'Business type is required'
-        }
-        break
-
-      case 2:
-        if (!isEmailVerified) {
-          newErrors.emailVerification = 'Please verify your email address'
-        }
-        break
-
-      case 3:
-        if (!formData.businessAddress.street.trim()) {
-          newErrors['businessAddress.street'] = 'Street address is required'
-        }
-        if (!formData.businessAddress.city.trim()) {
-          newErrors['businessAddress.city'] = 'City is required'
-        }
-        if (!formData.businessAddress.state.trim()) {
-          newErrors['businessAddress.state'] = 'State is required'
-        }
-        if (!formData.businessAddress.zipCode.trim()) {
-          newErrors['businessAddress.zipCode'] = 'ZIP code is required'
-        }
-        if (!formData.businessPhone.trim()) {
-          newErrors.businessPhone = 'Business phone is required'
-        }
-        break
-
-      case 4:
-        if (formData.specializations.length === 0) {
-          newErrors.specializations = 'Please select at least one specialization'
-        }
-        break
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const sendEmailVerification = async () => {
-    try {
-      // Mock email verification - in real app, call backend API
-      setVerificationSent(true)
-      // Simulate sending verification code
-      console.log('Verification code sent to:', user?.email)
-      // For demo, we'll use a mock code
-      setTimeout(() => {
-        alert('Demo verification code: 123456')
-      }, 1000)
-    } catch (error) {
-      setErrors({ emailVerification: 'Failed to send verification code' })
-    }
-  }
-
-  const verifyEmailCode = async () => {
-    try {
-      // Mock verification - in real app, call backend API
-      if (emailVerificationCode === '123456') {
-        setIsEmailVerified(true)
-        setErrors(prev => ({ ...prev, emailVerification: null }))
-      } else {
-        setErrors({ emailVerification: 'Invalid verification code' })
-      }
-    } catch (error) {
-      setErrors({ emailVerification: 'Verification failed' })
-    }
-  }
-
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => prev + 1)
-    }
-  }
-
-  const handlePrevious = () => {
-    setCurrentStep(prev => prev - 1)
-  }
-
-  const handleSubmit = async () => {
-    if (!validateStep(4)) return
-    
-    try {
-      setSubmitStatus('submitting')
-      
-      const result = await registerAsSeller(formData)
-      
-      if (result.success) {
-        setSubmitStatus('success')
-        setTimeout(() => {
-          navigate('/seller-dashboard')
-        }, 2000)
-      } else {
-        setSubmitStatus('error')
-        setErrors({ submit: result.error })
-      }
-    } catch (error) {
-      setSubmitStatus('error')
-      setErrors({ submit: 'An unexpected error occurred. Please try again.' })
-    }
-  }
-
-  const renderStep1 = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold text-white mb-4">Business Information</h3>
-        <p className="text-gray-400 mb-6">Tell us about your business</p>
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Business Name *
-        </label>
-        <input
-          type="text"
-          value={formData.businessName}
-          onChange={(e) => handleInputChange('businessName', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          placeholder="Enter your business name"
-        />
-        {errors.businessName && (
-          <p className="text-red-400 text-sm mt-1">{errors.businessName}</p>
-        )}
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Business Description * (minimum 50 characters)
-        </label>
-        <textarea
-          value={formData.businessDescription}
-          onChange={(e) => handleInputChange('businessDescription', e.target.value)}
-          rows={4}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          placeholder="Describe your business, what you sell, and what makes you unique..."
-        />
-        <p className="text-gray-500 text-sm mt-1">
-          {formData.businessDescription.length}/50 characters minimum
-        </p>
-        {errors.businessDescription && (
-          <p className="text-red-400 text-sm mt-1">{errors.businessDescription}</p>
-        )}
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Business Type *
-        </label>
-        <select
-          value={formData.businessType}
-          onChange={(e) => handleInputChange('businessType', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-        >
-          <option value="">Select business type</option>
-          {businessTypes.map(type => (
-            <option key={type} value={type}>{type}</option>
-          ))}
-        </select>
-        {errors.businessType && (
-          <p className="text-red-400 text-sm mt-1">{errors.businessType}</p>
-        )}
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Business Registration Number (Optional)
-          </label>
-          <input
-            type="text"
-            value={formData.businessRegistrationNumber}
-            onChange={(e) => handleInputChange('businessRegistrationNumber', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="Registration number"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Tax ID (Optional)
-          </label>
-          <input
-            type="text"
-            value={formData.taxId}
-            onChange={(e) => handleInputChange('taxId', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="Tax ID"
-          />
-        </div>
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Website URL (Optional)
-        </label>
-        <input
-          type="url"
-          value={formData.websiteUrl}
-          onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          placeholder="https://your-website.com"
-        />
-      </div>
-    </div>
-  )
-
-  const renderStep2 = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold text-white mb-4">Email Verification</h3>
-        <p className="text-gray-400 mb-6">We need to verify your email address to continue</p>
-      </div>
-
-      <div className="bg-gray-800 p-4 rounded-lg">
-        <div className="flex items-center gap-3 mb-4">
-          <Mail className="w-5 h-5 text-orange-500" />
-          <span className="text-white font-medium">{user?.email}</span>
-        </div>
-
-        {!verificationSent ? (
-          <div>
-            <p className="text-gray-300 mb-4">
-              Click the button below to send a verification code to your email address.
-            </p>
-            <button
-              onClick={sendEmailVerification}
-              className="w-full px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-            >
-              Send Verification Code
-            </button>
-          </div>
-        ) : (
-          <div>
-            {!isEmailVerified ? (
-              <div>
-                <p className="text-gray-300 mb-4">
-                  We've sent a verification code to your email. Please enter it below:
-                </p>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    value={emailVerificationCode}
-                    onChange={(e) => setEmailVerificationCode(e.target.value)}
-                    placeholder="Enter verification code"
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg tracking-widest"
-                    maxLength={6}
-                  />
-                  <button
-                    onClick={verifyEmailCode}
-                    disabled={!emailVerificationCode}
-                    className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Verify Code
-                  </button>
-                  <button
-                    onClick={sendEmailVerification}
-                    className="w-full px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    Resend Code
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center">
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h4 className="text-xl font-semibold text-white mb-2">Email Verified!</h4>
-                <p className="text-gray-300">Your email address has been successfully verified.</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {errors.emailVerification && (
-          <p className="text-red-400 text-sm mt-2">{errors.emailVerification}</p>
-        )}
-      </div>
-    </div>
-  )
-
-  const renderStep3 = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold text-white mb-4">Contact Information</h3>
-        <p className="text-gray-400 mb-6">How can customers reach you?</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Street Address *
-          </label>
-          <input
-            type="text"
-            value={formData.businessAddress.street}
-            onChange={(e) => handleInputChange('businessAddress.street', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="123 Business Street"
-          />
-          {errors['businessAddress.street'] && (
-            <p className="text-red-400 text-sm mt-1">{errors['businessAddress.street']}</p>
-          )}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            City *
-          </label>
-          <input
-            type="text"
-            value={formData.businessAddress.city}
-            onChange={(e) => handleInputChange('businessAddress.city', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="City"
-          />
-          {errors['businessAddress.city'] && (
-            <p className="text-red-400 text-sm mt-1">{errors['businessAddress.city']}</p>
-          )}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            State *
-          </label>
-          <input
-            type="text"
-            value={formData.businessAddress.state}
-            onChange={(e) => handleInputChange('businessAddress.state', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="State"
-          />
-          {errors['businessAddress.state'] && (
-            <p className="text-red-400 text-sm mt-1">{errors['businessAddress.state']}</p>
-          )}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            ZIP Code *
-          </label>
-          <input
-            type="text"
-            value={formData.businessAddress.zipCode}
-            onChange={(e) => handleInputChange('businessAddress.zipCode', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="12345"
-          />
-          {errors['businessAddress.zipCode'] && (
-            <p className="text-red-400 text-sm mt-1">{errors['businessAddress.zipCode']}</p>
-          )}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Country
-          </label>
-          <input
-            type="text"
-            value={formData.businessAddress.country}
-            onChange={(e) => handleInputChange('businessAddress.country', e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            placeholder="United States"
-          />
-        </div>
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Business Phone *
-        </label>
-        <input
-          type="tel"
-          value={formData.businessPhone}
-          onChange={(e) => handleInputChange('businessPhone', e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          placeholder="+1 (555) 123-4567"
-        />
-        {errors.businessPhone && (
-          <p className="text-red-400 text-sm mt-1">{errors.businessPhone}</p>
-        )}
-      </div>
-    </div>
-  )
-
-  const renderStep4 = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold text-white mb-4">Specializations</h3>
-        <p className="text-gray-400 mb-6">What types of products do you sell?</p>
-      </div>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {specializationOptions.map(specialization => (
-          <button
-            key={specialization}
-            type="button"
-            onClick={() => handleSpecializationToggle(specialization)}
-            className={`p-3 rounded-lg border text-sm font-medium transition-all ${
-              formData.specializations.includes(specialization)
-                ? 'bg-orange-500 border-orange-500 text-white'
-                : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-orange-500'
-            }`}
-          >
-            {specialization}
-          </button>
-        ))}
-      </div>
-      
-      {errors.specializations && (
-        <p className="text-red-400 text-sm">{errors.specializations}</p>
-      )}
-      
-      {formData.specializations.length > 0 && (
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h4 className="text-white font-medium mb-2">Selected Specializations:</h4>
-          <div className="flex flex-wrap gap-2">
-            {formData.specializations.map(spec => (
-              <span
-                key={spec}
-                className="px-3 py-1 bg-orange-500 text-white text-sm rounded-full"
-              >
-                {spec}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-
-  const renderSubmitStatus = () => {
-    if (submitStatus === 'submitting') {
-      return (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-white">Submitting your application...</p>
-        </div>
-      )
-    }
-    
-    if (submitStatus === 'success') {
-      return (
-        <div className="text-center py-8">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">Application Submitted!</h3>
-          <p className="text-gray-400">
-            Your seller application has been submitted successfully. 
-            We'll review it and get back to you within 2-3 business days.
-          </p>
-        </div>
-      )
-    }
-    
-    if (submitStatus === 'error') {
-      return (
-        <div className="text-center py-8">
-          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">Submission Failed</h3>
-          <p className="text-red-400 mb-4">{errors.submit}</p>
-          <button
-            onClick={() => setSubmitStatus(null)}
-            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-          >
-            Try Again
-          </button>
-        </div>
-      )
-    }
-    
-    return null
-  }
-
-  if (submitStatus) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
-        <div className="max-w-2xl mx-auto pt-20">
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700">
-            {renderSubmitStatus()}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
-      <div className="max-w-4xl mx-auto pt-20">
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Become a GIFTPAL Seller</h1>
-            <p className="text-gray-400">Join our marketplace and start selling your amazing products</p>
-          </div>
-          
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center mb-8">
-            {[1, 2, 3, 4].map((step) => (
-              <div key={step} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
-                  step <= currentStep
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-700 text-gray-400'
-                }`}>
-                  {step === 2 && isEmailVerified ? '✓' : step}
-                </div>
-                {step < 4 && (
-                  <div className={`w-12 h-1 mx-2 ${
-                    step < currentStep ? 'bg-orange-500' : 'bg-gray-700'
-                  }`} />
-                )}
-              </div>
-            ))}
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#1a1a1a', 
+      color: '#ffffff',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
+      {/* Header */}
+      <div style={{ 
+        background: '#1a1a1a', 
+        padding: '1.5rem 1rem',
+        borderBottom: '1px solid #333'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Title Section */}
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: '700', 
+              color: '#ff69b4', 
+              marginBottom: '0.5rem',
+              margin: 0
+            }}>
+              Become a Seller
+            </h1>
+            <p style={{ 
+              color: '#888', 
+              fontSize: '1rem',
+              margin: 0,
+              marginBottom: '1.5rem'
+            }}>
+              Join our marketplace and reach customers looking for thoughtful gifts. Start your seller journey with GIFTPAL today.
+            </p>
           </div>
 
-          {/* Step Labels */}
-          <div className="flex justify-between mb-8 text-xs text-gray-400">
-            <span className={currentStep === 1 ? 'text-orange-500' : ''}>Business Info</span>
-            <span className={currentStep === 2 ? 'text-orange-500' : ''}>Email Verify</span>
-            <span className={currentStep === 3 ? 'text-orange-500' : ''}>Contact Info</span>
-            <span className={currentStep === 4 ? 'text-orange-500' : ''}>Specializations</span>
+          {/* Stats */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '2rem', 
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Building2 size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>500+</span>
+              <span style={{ color: '#888' }}>Active Sellers</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <CheckCircle size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>95%</span>
+              <span style={{ color: '#888' }}>Success Rate</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ArrowRight size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>24h</span>
+              <span style={{ color: '#888' }}>Approval Time</span>
+            </div>
           </div>
-          
-          {/* Step Content */}
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+
+          {/* Back to Home */}
+          <Link 
+            to="/" 
+            style={{ 
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: '#4a9eff', 
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: '500'
+            }}
           >
-            {currentStep === 1 && renderStep1()}
-            {currentStep === 2 && renderStep2()}
-            {currentStep === 3 && renderStep3()}
-            {currentStep === 4 && renderStep4()}
-          </motion.div>
-          
-          {/* Navigation */}
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 1}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
-                currentStep === 1
-                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                  : 'bg-gray-700 text-white hover:bg-gray-600'
-              }`}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Previous
-            </button>
-            
-            {currentStep < 4 ? (
+            <ArrowLeft size={20} />
+            Back to Home
+          </Link>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div style={{ 
+        background: '#1a1a1a', 
+        padding: '1rem',
+        borderBottom: '1px solid #333'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {['benefits', 'process', 'apply'].map((tab) => (
               <button
-                onClick={handleNext}
-                disabled={currentStep === 2 && !isEmailVerified}
-                className="flex items-center px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                key={tab}
+                onClick={() => setSelectedTab(tab)}
+                style={{
+                  background: selectedTab === tab ? '#4a5568' : '#2a2a2a',
+                  color: selectedTab === tab ? '#fff' : '#888',
+                  border: '1px solid #444',
+                  borderRadius: '20px',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  textTransform: 'capitalize'
+                }}
               >
-                Next
-                <ArrowRight className="w-4 h-4 ml-2" />
+                {tab === 'benefits' ? 'Why Sell With Us' : tab === 'process' ? 'How It Works' : 'Apply Now'}
               </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="flex items-center px-6 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Submitting...' : 'Submit Application'}
-                <CheckCircle className="w-4 h-4 ml-2" />
-              </button>
-            )}
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Content */}
+      <div style={{ 
+        padding: '2rem 1rem',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        {/* Benefits Tab */}
+        {selectedTab === 'benefits' && (
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+            gap: '1.5rem' 
+          }}>
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                style={{
+                  background: '#2a2a2a',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  border: '1px solid #333',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                whileHover={{ 
+                  scale: 1.02,
+                  borderColor: '#ff69b4'
+                }}
+              >
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '1rem', 
+                  marginBottom: '1rem' 
+                }}>
+                  <div style={{ 
+                    fontSize: '2rem',
+                    width: '60px',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#3a3a3a',
+                    borderRadius: '12px'
+                  }}>
+                    {benefit.icon}
+                  </div>
+                  <div>
+                    <h3 style={{ 
+                      fontSize: '1.25rem', 
+                      fontWeight: '700', 
+                      margin: 0,
+                      marginBottom: '0.25rem'
+                    }}>
+                      {benefit.title}
+                    </h3>
+                    <div style={{
+                      background: '#ff69b4',
+                      color: '#fff',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '12px',
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      display: 'inline-block'
+                    }}>
+                      {benefit.highlight}
+                    </div>
+                  </div>
+                </div>
+                <p style={{ 
+                  color: '#aaa', 
+                  fontSize: '0.9rem',
+                  margin: 0,
+                  lineHeight: '1.6'
+                }}>
+                  {benefit.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Process Tab */}
+        {selectedTab === 'process' && (
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+            gap: '1.5rem' 
+          }}>
+            {steps.map((step, index) => (
+              <motion.div
+                key={step.number}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                style={{
+                  background: '#2a2a2a',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  border: '1px solid #333',
+                  textAlign: 'center',
+                  position: 'relative'
+                }}
+              >
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  background: '#ff69b4',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1rem auto',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: '#fff'
+                }}>
+                  {step.number}
+                </div>
+                <h3 style={{ 
+                  fontSize: '1.25rem', 
+                  fontWeight: '700', 
+                  margin: 0,
+                  marginBottom: '0.5rem'
+                }}>
+                  {step.title}
+                </h3>
+                <p style={{ 
+                  color: '#aaa', 
+                  fontSize: '0.9rem',
+                  margin: 0,
+                  lineHeight: '1.6'
+                }}>
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Apply Tab */}
+        {selectedTab === 'apply' && (
+          <div style={{ 
+            maxWidth: '600px',
+            margin: '0 auto',
+            textAlign: 'center'
+          }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                background: '#2a2a2a',
+                borderRadius: '16px',
+                padding: '2rem',
+                border: '1px solid #333'
+              }}
+            >
+              <div style={{ 
+                fontSize: '3rem',
+                marginBottom: '1rem'
+              }}>
+                🚀
+              </div>
+              <h3 style={{ 
+                fontSize: '2rem', 
+                fontWeight: '700', 
+                margin: 0,
+                marginBottom: '1rem',
+                color: '#ff69b4'
+              }}>
+                Ready to Start Selling?
+              </h3>
+              <p style={{ 
+                color: '#aaa', 
+                fontSize: '1rem',
+                margin: 0,
+                marginBottom: '2rem',
+                lineHeight: '1.6'
+              }}>
+                Join thousands of successful sellers on GIFTPAL. Start your application today and begin reaching customers who value thoughtful, unique gifts.
+              </p>
+              <button
+                onClick={handleStartApplication}
+                style={{
+                  background: '#ff69b4',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '1rem 2rem',
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  margin: '0 auto',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#e55a9c'}
+                onMouseLeave={(e) => e.target.style.background = '#ff69b4'}
+              >
+                Start Application <ArrowRight size={20} />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </div>
+
+      {/* Application Form Modal */}
+      {showApplicationForm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1rem'
+        }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{
+              background: '#2a2a2a',
+              borderRadius: '16px',
+              padding: '2rem',
+              border: '1px solid #333',
+              maxWidth: '500px',
+              width: '100%',
+              maxHeight: '80vh',
+              overflowY: 'auto'
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h2 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                margin: 0,
+                color: '#ff69b4'
+              }}>
+                Seller Application
+              </h2>
+              <button
+                onClick={() => setShowApplicationForm(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#888',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  padding: '0.5rem'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleFormSubmit}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  color: '#fff',
+                  fontWeight: '600'
+                }}>
+                  Business Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.businessName}
+                  onChange={(e) => handleInputChange('businessName', e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: '#3a3a3a',
+                    border: '1px solid #444',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                  placeholder="Enter your business name"
+                />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  color: '#fff',
+                  fontWeight: '600'
+                }}>
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: '#3a3a3a',
+                    border: '1px solid #444',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                  placeholder="Enter your email address"
+                />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  color: '#fff',
+                  fontWeight: '600'
+                }}>
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: '#3a3a3a',
+                    border: '1px solid #444',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                  placeholder="Enter your phone number"
+                />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  color: '#fff',
+                  fontWeight: '600'
+                }}>
+                  Business Type *
+                </label>
+                <select
+                  required
+                  value={formData.businessType}
+                  onChange={(e) => handleInputChange('businessType', e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: '#3a3a3a',
+                    border: '1px solid #444',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="">Select business type</option>
+                  <option value="individual">Individual/Sole Proprietorship</option>
+                  <option value="llc">LLC</option>
+                  <option value="corporation">Corporation</option>
+                  <option value="partnership">Partnership</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  color: '#fff',
+                  fontWeight: '600'
+                }}>
+                  Business Description *
+                </label>
+                <textarea
+                  required
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  rows={4}
+                  style={{
+                    width: '100%',
+                    background: '#3a3a3a',
+                    border: '1px solid #444',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    resize: 'vertical'
+                  }}
+                  placeholder="Describe your business and the products you plan to sell..."
+                />
+              </div>
+
+              <div style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'flex-end'
+              }}>
+                <button
+                  type="button"
+                  onClick={() => setShowApplicationForm(false)}
+                  style={{
+                    background: '#4a4a4a',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1.5rem',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    background: '#ff69b4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1.5rem',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Submit Application
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   )
 }
-
-export default SellerOnboarding

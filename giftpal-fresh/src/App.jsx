@@ -1,5 +1,5 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 // Import pages
@@ -12,6 +12,7 @@ import SellerProfile from './SellerProfile'
 
 // Import the enhanced HomePage
 import HomePage from './HomePage'
+import LandingPage from './LandingPage'
 
 // Import the floating chatbot
 // SimpleChatbot removed - using ChatSystem in HomePage for top-right messages
@@ -75,24 +76,37 @@ import SellerFlowTest from './components/test/SellerFlowTest'
 import BackendTest from './components/test/BackendTest'
 import EditableProfile from './components/profile/EditableProfile'
 
+// Import Mobile Navigation
+import MobileBottomNav from './components/navigation/MobileBottomNav'
+
 // Main App component with routing
 function App() {
+  const isDev = import.meta.env.MODE === 'development'
+  const navigate = useNavigate()
+  const location = useLocation()
   const [showSplash, setShowSplash] = useState(true)
 
   // Check if user has seen splash screen recently (within 5 minutes for development)
   useEffect(() => {
+    // In development, always show the splash intro for demos
+    if (isDev) return
     const lastSplashTime = localStorage.getItem('giftpal_last_splash')
     const now = Date.now()
-    const fiveMinutes = 5 * 60 * 1000 // Show splash more frequently during development
+    const cooldownMs = 30 * 60 * 1000 // 30 minutes in production
 
-    if (lastSplashTime && (now - parseInt(lastSplashTime)) < fiveMinutes) {
+    if (lastSplashTime && (now - parseInt(lastSplashTime)) < cooldownMs) {
       setShowSplash(false)
     }
-  }, [])
+  }, [isDev])
 
   const handleSplashComplete = () => {
     localStorage.setItem('giftpal_last_splash', Date.now().toString())
     setShowSplash(false)
+    const landingSeen = localStorage.getItem('giftpal_landing_seen')
+    if (!landingSeen && location.pathname !== '/landing') {
+      localStorage.setItem('giftpal_landing_seen', Date.now().toString())
+      navigate('/landing')
+    }
   }
 
   if (showSplash) {
@@ -103,6 +117,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/brands" element={<Brands />} />
         <Route path="/gifts" element={<GiftsShop />} />
@@ -124,7 +139,7 @@ function App() {
         <Route path="/api-test" element={<APITest />} />
         <Route path="/seller-flow-test" element={<SellerFlowTest />} />
         <Route path="/backend-test" element={<BackendTest />} />
-        <Route path="/profile" element={<EditableProfile />} />
+        <Route path="/edit-profile" element={<EditableProfile />} />
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/occasions" element={<OccasionsPage />} />
         <Route path="/recipients" element={<RecipientsPage />} />
@@ -139,6 +154,9 @@ function App() {
       </Routes>
 
       {/* Note: ChatSystem (Messages) is handled in HomePage.jsx for top-right positioning */}
+
+      {/* Mobile Bottom Navigation - Instagram Style */}
+      <MobileBottomNav />
 
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />

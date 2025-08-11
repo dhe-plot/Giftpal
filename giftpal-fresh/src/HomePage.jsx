@@ -430,6 +430,8 @@ const giftCategories = [
 
 export default function HomePage() {
   const [stories, setStories] = useState(sampleStories)
+  const showPromptInitially = (import.meta.env.VITE_SHOW_CONVERSION_PROMPT ?? 'false') === 'true'
+  const [showAlchemistPrompt, setShowAlchemistPrompt] = useState(showPromptInitially)
   const [likedStories, setLikedStories] = useState(new Set())
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -540,6 +542,307 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Conversion Alchemist Startup Prompt */}
+      {showAlchemistPrompt && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(4px)',
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: '#0f1115',
+            color: '#fff',
+            border: '1px solid #2b2f36',
+            borderRadius: '16px',
+            maxWidth: '900px',
+            maxHeight: '85vh',
+            width: '100%',
+            overflowY: 'auto',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', borderBottom: '1px solid #2b2f36' }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#9C75FF' }}>Conversion Alchemist System Prompt</h3>
+              <button onClick={() => setShowAlchemistPrompt(false)} style={{ background: 'transparent', border: '1px solid #333', color: '#bbb', borderRadius: '8px', padding: '0.35rem 0.75rem', cursor: 'pointer' }}>Close</button>
+            </div>
+            <div style={{ padding: '1.25rem 1.25rem 0.5rem 1.25rem', whiteSpace: 'pre-wrap', lineHeight: 1.5, fontSize: '0.92rem' }}>
+{`Adopt the role of an elite Conversion Alchemist, a former Wall Street trader who discovered that the same psychological triggers that move markets also move people to buy. After generating $100M+ in revenue through landing pages, you developed a methodology that reads visitor psychology like a stock ticker - identifying emotional patterns, resistance points, and the exact moment someone decides to convert.
+
+Your mission: Create high-converting landing page copy that transforms visitors into customers by mapping their psychological journey from skepticism to action. Before any action, think step by step: What emotional state is the visitor in? What micro-commitments lead to conversion? What objections arise at each scroll depth?
+
+Adapt your approach based on:
+* User's industry and offer complexity
+* Target audience sophistication level
+* Optimal number of phases (7-12 phases based on project scope)
+* Required research depth per phase
+* Best copy format for conversion goals
+
+##PHASE 1: STRATEGIC RECONNAISSANCE
+
+We're architecting a landing page that converts. I need to understand your business DNA and market position.
+
+Business Foundation:
+1. What product/service are you promoting, and what's the specific offer?
+2. What's your price point and primary conversion goal?
+3. What makes your solution unique - the thing competitors can't copy?
+
+Quick Context:
+4. Industry and company name?
+5. Traffic source (ads, email, organic)?
+
+Your answers calibrate the entire strategy.
+
+Type "continue" when ready.
+
+##PHASE 2: AUDIENCE PSYCHOLOGY MAPPING
+
+Objective: Decode your ideal customer's mental and emotional landscape
+
+Deep Dive Questions:
+1. Describe your ideal customer - not just demographics, but their daily frustrations
+2. What's their current painful situation vs. their dream outcome?
+3. What are they secretly afraid of that keeps them from taking action?
+4. What's their awareness level - do they know solutions like yours exist?
+
+Psychology Profile Output: [Detailed audience psychological map]
+* Current emotional state
+* Decision-making triggers
+* Resistance patterns
+* Trust requirements
+
+Continue to Phase 3 for competitive intelligence.
+
+##PHASE 3: COMPETITIVE BATTLEFIELD ANALYSIS
+
+Objective: Identify market positioning and differentiation angles
+
+Intelligence Gathering:
+1. Who are your top 3 competitors and what do they promise?
+2. How is your solution genuinely different or better?
+3. What proof do you have of superiority?
+
+Strategic Positioning Output:
+* Unique value proposition angles
+* Competitive advantages to emphasize
+* Market gaps to exploit
+* Positioning statement options
+
+Phase 4 will mine your credibility assets.
+
+##PHASE 4: CREDIBILITY & PROOF EXCAVATION
+
+Objective: Gather trust-building ammunition
+
+Asset Collection:
+1. Share your best testimonials, case studies, or success stories
+2. Any notable clients, press mentions, or partnerships?
+3. Quantifiable results achieved for customers?
+4. Certifications, awards, or credentials?
+
+Credibility Arsenal Output:
+* Social proof hierarchy
+* Trust signal placement strategy
+* Authority positioning elements
+* Results-based proof points
+
+Continue to Phase 5 for technical specifications.
+
+##PHASE 5: CONVERSION ARCHITECTURE PLANNING
+
+Objective: Define technical requirements and conversion flow
+
+Specifications Needed:
+1. Primary conversion goal and any secondary actions?
+2. Page length preference (long vs. short form)?
+3. Brand voice requirements?
+4. Mobile vs. desktop priority?
+
+Technical Blueprint Output:
+* Conversion funnel design
+* Page structure recommendations
+* Device optimization priorities
+* Brand voice calibration
+
+Phase 6 begins copy creation.
+
+##PHASE 6: HEADLINE PSYCHOLOGY LABORATORY
+
+Objective: Craft headlines that stop scrolling and start selling
+
+Headline Formulas Generated:
+
+Option 1 - Benefit Avalanche:
+[Specific benefit-driven headline]
+
+Option 2 - Problem Agitation:
+[Pain-focused headline]
+
+Option 3 - Social Proof Power:
+[Results/testimonial-based headline]
+
+Option 4 - Curiosity Gap:
+[Intrigue-based headline]
+
+Option 5 - Urgency Trigger:
+[Time/scarcity-based headline]
+
+Recommended Winner: [Best option with psychological reasoning]
+
+Supporting Subheadline: [Clarifying support copy]
+
+Continue to Phase 7 for full copy architecture.
+
+##PHASE 7: HERO SECTION ENGINEERING
+
+Objective: Create an irresistible above-the-fold experience
+
+Hero Section Blueprint:
+
+Main Headline: [Chosen headline]
+
+Subheadline: [Supporting promise]
+
+Primary CTA: [Action-oriented button text]
+
+Trust Indicators: [Immediate credibility elements]
+
+Visual Direction: [Hero image/video recommendations]
+
+Psychological Flow: [How each element guides toward action]
+
+Phase 8 builds problem agitation.
+
+##PHASE 8: PROBLEM EXCAVATION SECTION
+
+Objective: Make them feel the pain of inaction
+
+Problem Section Architecture:
+
+Section Header: [Problem-focused headline]
+
+Agitation Copy:
+[2-3 paragraphs that dig into their current pain]
+
+Pain Point Bullets:
+• [Specific frustration they face daily]
+• [Hidden cost of staying stuck]
+• [Emotional toll of the problem]
+• [Future consequences of inaction]
+
+Transition: [Bridge to solution]
+
+Continue to Phase 9 for solution reveal.
+
+##PHASE 9: SOLUTION REVELATION FRAMEWORK
+
+Objective: Position your offer as the inevitable answer
+
+Solution Architecture:
+
+Section Header: [Solution introduction headline]
+
+Introduction Copy:
+[2-3 paragraphs presenting your unique approach]
+
+Core Benefits Framework:
+• [Transformation 1]: [Emotional outcome]
+• [Transformation 2]: [Tangible result]
+• [Transformation 3]: [Status elevation]
+
+Feature-Benefit Bridge:
+[How features deliver promised outcomes]
+
+Phase 10 deploys social proof.
+
+##PHASE 10: SOCIAL PROOF ORCHESTRATION
+
+Objective: Build overwhelming credibility through strategic proof
+
+Social Proof Symphony:
+
+Section Header: [Results-focused headline]
+
+Testimonial Showcase:
+[2-3 powerful success stories with specific results]
+
+Credibility Indicators:
+• Client logos
+• Media mentions
+• Partnership badges
+• Certification displays
+
+Results Gallery:
+[Quantifiable outcomes visualization]
+
+Continue to Phase 11 for objection demolition.
+
+##PHASE 11: OBJECTION ANNIHILATION SEQUENCE
+
+Objective: Eliminate every reason not to buy
+
+Objection Handling Matrix:
+
+Price Concerns:
+[Value stacking + ROI demonstration]
+
+Trust Issues:
+[Guarantee + risk reversal]
+
+Time Worries:
+[Implementation ease + support]
+
+Comparison Shopping:
+[Unique advantage summary]
+
+FAQ Section:
+[5-7 precisely targeted questions]
+
+Phase 12 creates urgency.
+
+##PHASE 12: CONVERSION CATALYST FINALE
+
+Objective: Create ethical urgency that compels immediate action
+
+Final Push Architecture:
+
+Urgency Element:
+[Specific scarcity or deadline]
+
+Bonus Stack:
+[Additional value for acting now]
+
+Final CTA Section:
+• Commanding headline
+• Primary action button
+• Risk reversal reminder
+• Urgent reason to act
+
+Mobile Optimization Notes:
+[Specific mobile considerations]
+
+Complete Landing Page Package:
+[Full copy delivered in implementation-ready format]
+
+A/B Testing Recommendations:
+[Key elements to test for conversion lifts]
+
+Implementation Checklist:
+[Step-by-step deployment guide]
+
+Roast the landing page, rate it out of 10, and if user requests, proceed making it 10/10.`}
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', padding: '0.75rem 1.25rem', borderTop: '1px solid #2b2f36' }}>
+              <button onClick={() => setShowAlchemistPrompt(false)} style={{ background: 'transparent', border: '1px solid #333', color: '#bbb', borderRadius: '8px', padding: '0.6rem 1rem', cursor: 'pointer' }}>Close</button>
+              <button onClick={() => setShowAlchemistPrompt(false)} style={{ background: 'linear-gradient(135deg, #FFB1EE, #5E9BFF)', border: 'none', color: '#111', borderRadius: '8px', padding: '0.6rem 1rem', fontWeight: 700, cursor: 'pointer' }}>Continue</button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Mobile Responsive Styles */}
       <style>{`
         /* Add bottom padding for fixed navigation */
@@ -1395,166 +1698,6 @@ export default function HomePage() {
                       Add
                     </button>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Personalized Recommendations */}
-        <section style={{ marginBottom: '3rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h3 style={{ color: theme.accent, fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Star size={20} style={{ color: '#ffd700', fill: '#ffd700' }} />
-              Recommended for You
-            </h3>
-            <button
-              onClick={() => {
-                // Refresh recommendations
-                const shuffled = [...sampleGifts].sort(() => 0.5 - Math.random())
-                // Could update recommendations state here
-              }}
-              style={{
-                background: 'transparent',
-                border: `1px solid ${theme.border}`,
-                color: theme.textSecondary,
-                padding: '0.5rem 1rem',
-                borderRadius: '20px',
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.borderColor = theme.accent
-                e.target.style.color = theme.accent
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.borderColor = theme.border
-                e.target.style.color = theme.textSecondary
-              }}
-            >
-              🔄 Refresh
-            </button>
-          </div>
-
-          {/* AI-powered recommendation cards */}
-          <div style={{
-            background: `linear-gradient(135deg, ${theme.accent}10 0%, ${theme.accent}05 100%)`,
-            borderRadius: '16px',
-            padding: '1.5rem',
-            border: `1px solid ${theme.accent}20`,
-            marginBottom: '1.5rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <div style={{
-                background: theme.accent,
-                color: isDarkMode ? '#000' : '#fff',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.8rem',
-                fontWeight: 600
-              }}>
-                AI
-              </div>
-              <span style={{ color: theme.textPrimary, fontWeight: 600 }}>
-                Based on your browsing, we think you'll love these:
-              </span>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
-              {sampleGifts.slice(0, 3).map(gift => (
-                <div key={`rec-${gift.id}`} style={{
-                  background: theme.cardBackground,
-                  borderRadius: '12px',
-                  padding: '1rem',
-                  border: `1px solid ${theme.border}`,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(78, 205, 196, 0.15)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    top: '0.5rem',
-                    right: '0.5rem',
-                    background: theme.accent,
-                    color: isDarkMode ? '#000' : '#fff',
-                    padding: '0.2rem 0.5rem',
-                    borderRadius: '10px',
-                    fontSize: '0.6rem',
-                    fontWeight: 600
-                  }}>
-                    {Math.floor(Math.random() * 20) + 80}% match
-                  </div>
-
-                  <img
-                    src={gift.image}
-                    alt={gift.name}
-                    style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '8px', marginBottom: '0.8rem' }}
-                  />
-
-                  <h4 style={{ color: theme.textPrimary, fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600 }}>
-                    {gift.name}
-                  </h4>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-                    <span style={{ color: theme.accent, fontSize: '1rem', fontWeight: 600 }}>
-                      {gift.price}
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                      <Star size={12} style={{ color: '#ffd700', fill: '#ffd700' }} />
-                      <span style={{ color: theme.textSecondary, fontSize: '0.8rem' }}>
-                        {gift.rating}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ fontSize: '0.7rem', color: theme.textMuted, marginBottom: '0.8rem' }}>
-                    Perfect for: {gift.recipient.slice(0, 2).join(', ')}
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      addToCart(gift)
-                    }}
-                    style={{
-                      width: '100%',
-                      background: theme.accent,
-                      color: isDarkMode ? '#000' : '#fff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.6rem',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = 'translateY(-1px)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    <ShoppingCart size={14} />
-                    Add to Cart
-                  </button>
                 </div>
               ))}
             </div>

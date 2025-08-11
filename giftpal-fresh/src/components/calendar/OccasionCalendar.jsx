@@ -1,436 +1,296 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Calendar, 
-  ChevronLeft, 
-  ChevronRight, 
-  Plus, 
-  Gift, 
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
+import {
+  Calendar,
   Bell,
-  Filter,
-  List,
-  Grid,
-  AlertCircle,
   Clock,
-  User
+  ArrowLeft
 } from 'lucide-react'
-import SectionWithMockup from '../ui/section-with-mockup'
+import { Link } from 'react-router-dom'
 
-const OccasionCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [viewMode, setViewMode] = useState('month') // month, week, list
-  const [occasions, setOccasions] = useState([])
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [showAddModal, setShowAddModal] = useState(false)
-
-  // Sample occasions data
-  const sampleOccasions = [
-    {
-      id: 1,
-      title: "Sarah's Birthday",
-      date: "2024-02-15",
-      type: "birthday",
-      person: {
-        name: "Sarah Johnson",
-        avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-        relationship: "Friend"
-      },
-      reminderSet: true,
-      giftIdeas: ["Yoga Mat", "Tea Set", "Books"],
-      priority: "high",
-      notes: "Loves yoga and mindfulness"
+const occasions = [
+  {
+    id: 1,
+    title: "Sarah's Birthday",
+    type: 'birthday',
+    date: '2024-02-15',
+    person: {
+      name: 'Sarah Johnson',
+      relationship: 'Friend'
     },
-    {
-      id: 2,
-      title: "Mike & Lisa Anniversary",
-      date: "2024-02-20",
-      type: "anniversary",
-      person: {
-        name: "Mike Chen",
-        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-        relationship: "Brother"
-      },
-      reminderSet: true,
-      giftIdeas: ["Wine Set", "Photo Album", "Dinner Voucher"],
-      priority: "medium",
-      notes: "5th anniversary"
+    reminderSet: true
+  },
+  {
+    id: 2,
+    title: "Wedding Anniversary",
+    type: 'anniversary',
+    date: '2024-02-20',
+    person: {
+      name: 'Mike & Lisa',
+      relationship: 'Friends'
     },
-    {
-      id: 3,
-      title: "Emma's Graduation",
-      date: "2024-03-05",
-      type: "graduation",
-      person: {
-        name: "Emma Wilson",
-        avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-        relationship: "Colleague"
-      },
-      reminderSet: false,
-      giftIdeas: ["Professional Bag", "Watch", "Books"],
-      priority: "medium",
-      notes: "MBA graduation"
+    reminderSet: true
+  },
+  {
+    id: 3,
+    title: "Mom's Birthday",
+    type: 'birthday',
+    date: '2024-03-01',
+    person: {
+      name: 'Mom',
+      relationship: 'Family'
     },
-    {
-      id: 4,
-      title: "Mom's Birthday",
-      date: "2024-03-12",
-      type: "birthday",
-      person: {
-        name: "Mom",
-        avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-        relationship: "Family"
-      },
-      reminderSet: true,
-      giftIdeas: ["Jewelry", "Spa Day", "Flowers"],
-      priority: "high",
-      notes: "Special milestone birthday"
+    reminderSet: false
+  },
+  {
+    id: 4,
+    title: "Graduation Day",
+    type: 'graduation',
+    date: '2024-03-15',
+    person: {
+      name: 'Alex Chen',
+      relationship: 'Cousin'
     },
-    {
-      id: 5,
-      title: "Valentine's Day",
-      date: "2024-02-14",
-      type: "holiday",
-      person: {
-        name: "Partner",
-        avatar: "https://randomuser.me/api/portraits/women/7.jpg",
-        relationship: "Partner"
-      },
-      reminderSet: true,
-      giftIdeas: ["Chocolates", "Flowers", "Jewelry"],
-      priority: "high",
-      notes: "Romantic dinner planned"
-    }
-  ]
-
-  useEffect(() => {
-    setOccasions(sampleOccasions)
-  }, [])
-
-  const getDaysInMonth = (date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+    reminderSet: true
   }
+]
 
-  const getFirstDayOfMonth = (date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+const getOccasionIcon = (type) => {
+  const icons = {
+    birthday: '🎂',
+    anniversary: '💕',
+    graduation: '🎓',
+    wedding: '💒',
+    holiday: '🎄'
   }
+  return icons[type] || '🎁'
+}
 
-  const getOccasionsForDate = (date) => {
-    const dateStr = date.toISOString().split('T')[0]
-    return occasions.filter(occasion => occasion.date === dateStr)
-  }
+export default function OccasionCalendar() {
+  const [selectedFilter, setSelectedFilter] = useState('All Events')
 
-  const getOccasionIcon = (type) => {
-    const icons = {
-      birthday: '🎂',
-      anniversary: '💕',
-      graduation: '🎓',
-      wedding: '💒',
-      holiday: '🎉'
-    }
-    return icons[type] || '🎉'
-  }
+  const filters = ['All Events (4)', 'This Month (3)', 'Upcoming (2)']
 
-  const getPriorityColor = (priority) => {
-    const colors = {
-      high: 'bg-red-500/20 border-red-500/50 text-red-300',
-      medium: 'bg-orange-500/20 border-orange-500/50 text-orange-300',
-      low: 'bg-green-500/20 border-green-500/50 text-green-300'
-    }
-    return colors[priority] || colors.medium
-  }
-
-  const getDaysUntil = (dateStr) => {
-    const today = new Date()
-    const eventDate = new Date(dateStr)
-    const diffTime = eventDate - today
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays
-  }
-
-  const navigateMonth = (direction) => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev)
-      newDate.setMonth(prev.getMonth() + direction)
-      return newDate
-    })
-  }
-
-  const renderCalendarGrid = () => {
-    const daysInMonth = getDaysInMonth(currentDate)
-    const firstDay = getFirstDayOfMonth(currentDate)
-    const days = []
-
-    // Empty cells for days before the first day of the month
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-24"></div>)
-    }
-
-    // Days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-      const dayOccasions = getOccasionsForDate(date)
-      const isToday = date.toDateString() === new Date().toDateString()
-      const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString()
-
-      days.push(
-        <motion.div
-          key={day}
-          whileHover={{ scale: 1.02 }}
-          className={`h-24 p-2 border border-gray-700 cursor-pointer transition-colors ${
-            isToday ? 'bg-orange-500/20 border-orange-500' : 'hover:bg-gray-800'
-          } ${isSelected ? 'bg-blue-500/20 border-blue-500' : ''}`}
-          onClick={() => setSelectedDate(date)}
-        >
-          <div className="flex justify-between items-start mb-1">
-            <span className={`text-sm font-medium ${isToday ? 'text-orange-300' : 'text-white'}`}>
-              {day}
-            </span>
-            {dayOccasions.length > 0 && (
-              <span className="text-xs bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                {dayOccasions.length}
-              </span>
-            )}
+  return (
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#1a1a1a', 
+      color: '#ffffff',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
+      {/* Header */}
+      <div style={{ 
+        background: '#1a1a1a', 
+        padding: '1.5rem 1rem',
+        borderBottom: '1px solid #333'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Title Section */}
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: '700', 
+              color: '#ff69b4', 
+              marginBottom: '0.5rem',
+              margin: 0
+            }}>
+              Calendar
+            </h1>
+            <p style={{ 
+              color: '#888', 
+              fontSize: '1rem',
+              margin: 0,
+              marginBottom: '1.5rem'
+            }}>
+              Visual calendar view of all upcoming birthdays and special events. Plan ahead and never miss an important celebration again.
+            </p>
           </div>
-          <div className="space-y-1">
-            {dayOccasions.slice(0, 2).map(occasion => (
-              <div
-                key={occasion.id}
-                className="text-xs bg-gray-700 text-gray-300 rounded px-1 py-0.5 truncate"
+
+          {/* Stats */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '2rem', 
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Calendar size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>24</span>
+              <span style={{ color: '#888' }}>Events</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Bell size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>8</span>
+              <span style={{ color: '#888' }}>Reminders</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Clock size={20} style={{ color: '#ff69b4' }} />
+              <span style={{ fontWeight: '600' }}>3</span>
+              <span style={{ color: '#888' }}>This Week</span>
+            </div>
+          </div>
+
+          {/* Back to Home */}
+          <Link 
+            to="/" 
+            style={{ 
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: '#4a9eff', 
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: '500'
+            }}
+          >
+            <ArrowLeft size={20} />
+            Back to Home
+          </Link>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div style={{ 
+        background: '#1a1a1a', 
+        padding: '1rem',
+        borderBottom: '1px solid #333'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {filters.map((filter, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedFilter(filter)}
+                style={{
+                  background: selectedFilter === filter ? '#4a5568' : '#2a2a2a',
+                  color: selectedFilter === filter ? '#fff' : '#888',
+                  border: '1px solid #444',
+                  borderRadius: '20px',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
               >
-                {getOccasionIcon(occasion.type)} {occasion.person.name}
-              </div>
+                {filter}
+              </button>
             ))}
-            {dayOccasions.length > 2 && (
-              <div className="text-xs text-gray-500">+{dayOccasions.length - 2} more</div>
-            )}
           </div>
-        </motion.div>
-      )
-    }
+        </div>
+      </div>
 
-    return days
-  }
-
-  const renderUpcomingList = () => {
-    const upcoming = occasions
-      .filter(occasion => getDaysUntil(occasion.date) >= 0)
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
-      .slice(0, 10)
-
-    return (
-      <div className="space-y-4">
-        {upcoming.map(occasion => {
-          const daysUntil = getDaysUntil(occasion.date)
-          return (
-            <motion.div
-              key={occasion.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`p-4 rounded-xl border ${getPriorityColor(occasion.priority)}`}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={occasion.person.avatar}
-                    alt={occasion.person.name}
-                    className="w-12 h-12 rounded-full border-2 border-gray-600"
-                  />
+      {/* Events Grid */}
+      <div style={{ 
+        padding: '2rem 1rem',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: '1.5rem' 
+        }}>
+          {occasions.map((occasion, index) => {
+            const daysUntil = Math.ceil((new Date(occasion.date) - new Date()) / (1000 * 60 * 60 * 24))
+            
+            return (
+              <motion.div
+                key={occasion.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                style={{
+                  background: '#2a2a2a',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  border: '1px solid #333',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                whileHover={{ 
+                  scale: 1.02,
+                  borderColor: '#ff69b4'
+                }}
+              >
+                {/* Event Info */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '1rem', 
+                  marginBottom: '1rem' 
+                }}>
+                  <div style={{ 
+                    fontSize: '2rem',
+                    width: '60px',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#3a3a3a',
+                    borderRadius: '12px'
+                  }}>
+                    {getOccasionIcon(occasion.type)}
+                  </div>
                   <div>
-                    <h3 className="font-semibold text-white">{occasion.title}</h3>
-                    <p className="text-gray-400 text-sm">{occasion.person.relationship}</p>
+                    <h3 style={{ 
+                      fontSize: '1.25rem', 
+                      fontWeight: '700', 
+                      margin: 0,
+                      marginBottom: '0.25rem'
+                    }}>
+                      {occasion.title}
+                    </h3>
+                    <p style={{ 
+                      color: '#888', 
+                      margin: 0,
+                      fontSize: '0.9rem'
+                    }}>
+                      {occasion.person.name} • {occasion.person.relationship}
+                    </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl mb-1">{getOccasionIcon(occasion.type)}</div>
-                  <span className="text-sm font-medium">
-                    {daysUntil === 0 ? 'Today' : `${daysUntil} days`}
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-400 text-sm">
+                {/* Date and Days Until */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  marginBottom: '1rem'
+                }}>
+                  <Calendar size={16} style={{ color: '#ff69b4' }} />
+                  <span style={{ fontSize: '0.9rem', color: '#aaa' }}>
                     {new Date(occasion.date).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
                     })}
                   </span>
+                  <span style={{ 
+                    marginLeft: 'auto',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    color: daysUntil <= 7 ? '#ff6b6b' : daysUntil <= 14 ? '#ffa726' : '#4caf50'
+                  }}>
+                    {daysUntil === 0 ? 'Today' : `${daysUntil} days`}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  {occasion.reminderSet ? (
-                    <Bell className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <BellOff className="w-4 h-4 text-gray-500" />
-                  )}
-                  <button className="text-orange-500 hover:text-orange-400 text-sm font-medium">
-                    View Gifts
-                  </button>
+
+                {/* Reminder Status */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem'
+                }}>
+                  <Bell size={14} style={{ color: occasion.reminderSet ? '#4caf50' : '#666' }} />
+                  <span style={{ fontSize: '0.8rem', color: '#888' }}>
+                    {occasion.reminderSet ? 'Reminder set' : 'No reminder'}
+                  </span>
                 </div>
-              </div>
-
-              {occasion.notes && (
-                <div className="mt-3 p-2 bg-gray-800/50 rounded-lg">
-                  <p className="text-gray-300 text-sm">{occasion.notes}</p>
-                </div>
-              )}
-            </motion.div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <SectionWithMockup
-        title={
-          <>
-            Occasion Calendar
-            <br />
-            & Planning
-          </>
-        }
-        description={
-          <>
-            Visual calendar view of all upcoming birthdays and special events.
-            <br />
-            Plan ahead and never miss an important celebration again.
-            <br />
-            Organize your gift-giving schedule with smart reminders.
-          </>
-        }
-        primaryImageSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
-        secondaryImageSrc="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=600&fit=crop"
-      />
-
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Occasion Calendar</h1>
-            <p className="text-gray-400">Never miss an important celebration</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex bg-gray-800 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode('month')}
-                className={`px-3 py-2 rounded-md transition-colors ${
-                  viewMode === 'month' ? 'bg-orange-500 text-white' : 'text-gray-400'
-                }`}
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`px-3 py-2 rounded-md transition-colors ${
-                  viewMode === 'list' ? 'bg-orange-500 text-white' : 'text-gray-400'
-                }`}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Add Occasion
-            </button>
-          </div>
+              </motion.div>
+            )
+          })}
         </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center gap-3 mb-2">
-              <AlertCircle className="w-6 h-6 text-red-500" />
-              <h3 className="font-semibold">This Week</h3>
-            </div>
-            <p className="text-2xl font-bold text-red-500">
-              {occasions.filter(o => getDaysUntil(o.date) <= 7 && getDaysUntil(o.date) >= 0).length}
-            </p>
-          </div>
-          
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center gap-3 mb-2">
-              <Clock className="w-6 h-6 text-orange-500" />
-              <h3 className="font-semibold">This Month</h3>
-            </div>
-            <p className="text-2xl font-bold text-orange-500">
-              {occasions.filter(o => getDaysUntil(o.date) <= 30 && getDaysUntil(o.date) >= 0).length}
-            </p>
-          </div>
-          
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center gap-3 mb-2">
-              <Bell className="w-6 h-6 text-green-500" />
-              <h3 className="font-semibold">Reminders Set</h3>
-            </div>
-            <p className="text-2xl font-bold text-green-500">
-              {occasions.filter(o => o.reminderSet).length}
-            </p>
-          </div>
-          
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center gap-3 mb-2">
-              <User className="w-6 h-6 text-blue-500" />
-              <h3 className="font-semibold">People</h3>
-            </div>
-            <p className="text-2xl font-bold text-blue-500">
-              {new Set(occasions.map(o => o.person.name)).size}
-            </p>
-          </div>
-        </div>
-
-        {/* Calendar/List View */}
-        {viewMode === 'month' ? (
-          <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
-            {/* Calendar Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <button
-                onClick={() => navigateMonth(-1)}
-                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <h2 className="text-xl font-semibold">
-                {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-              </h2>
-              <button
-                onClick={() => navigateMonth(1)}
-                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Days of Week */}
-            <div className="grid grid-cols-7 border-b border-gray-700">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="p-4 text-center font-medium text-gray-400 border-r border-gray-700 last:border-r-0">
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7">
-              {renderCalendarGrid()}
-            </div>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-xl font-semibold mb-6">Upcoming Occasions</h2>
-            {renderUpcomingList()}
-          </div>
-        )}
       </div>
     </div>
   )
 }
-
-export default OccasionCalendar

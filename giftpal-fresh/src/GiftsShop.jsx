@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { GlowCard } from "./components/ui/spotlight-card";
-import { Heart, ShoppingCart, Star, Eye, Package, ArrowLeft, Search, Filter } from "lucide-react";
+import {
+  Heart,
+  ShoppingCart,
+  Star,
+  Eye,
+  Package,
+  ArrowLeft,
+  Search,
+  Grid,
+  List,
+  SlidersHorizontal,
+  TrendingUp,
+  Zap,
+  Sparkles,
+  ChevronDown,
+  X
+} from "lucide-react";
 import SponsoredAdDisplay from "./components/ads/SponsoredAdDisplay";
 
 const giftProducts = [
@@ -449,6 +466,18 @@ export default function GiftsShop() {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState(new Set());
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Mouse tracking for interactive effects
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const categories = ['All', 'Beauty & Wellness', 'Food & Beverage', 'Jewelry & Accessories', 'Fashion & Accessories', 'Home & Living', 'Technology'];
 
@@ -504,7 +533,7 @@ export default function GiftsShop() {
     setWishlist(newWishlist);
   };
 
-  const filteredAndSortedProducts = products
+  const filteredProducts = products
     .filter(product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filterCategory === 'All' || product.category === filterCategory) &&
@@ -539,62 +568,275 @@ export default function GiftsShop() {
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="p-2 hover:bg-gray-800 rounded-full transition-colors">
-            <ArrowLeft className="w-6 h-6 text-white" />
-          </Link>
-          <h1 className="text-xl font-semibold text-white">Gifts</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-800 rounded-full transition-colors">
-            <Search className="w-6 h-6 text-white" />
-          </button>
-          <button className="p-2 hover:bg-gray-800 rounded-full transition-colors relative">
-            <ShoppingCart className="w-6 h-6 text-white" />
-            {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {cart.reduce((total, item) => total + item.quantity, 0)}
-              </span>
-            )}
-          </button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 text-white relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Floating particles */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-purple-500/30 rounded-full"
+            animate={{
+              x: [0, 50, 0],
+              y: [0, -50, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 8 + i * 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+
+        {/* Gradient orbs */}
+        <motion.div
+          className="absolute w-80 h-80 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
+          animate={{
+            x: mousePosition.x * 0.01,
+            y: mousePosition.y * 0.01,
+          }}
+          style={{ left: '20%', top: '10%' }}
+        />
       </div>
 
-      {/* Content */}
-      <div className="p-4 pb-24">
-        {/* Search */}
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search gifts..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-          />
-        </div>
-
-        {/* Filter Categories */}
-        <div className="flex gap-2 mb-6 overflow-x-auto">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setFilterCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                filterCategory === category
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-800 text-gray-400 hover:text-white'
-              }`}
+      {/* Enhanced Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-gray-800/80 backdrop-blur-sm border-b border-gray-700/50"
+      >
+        <div className="flex items-center justify-between p-4 sm:p-6">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/"
+              className="group p-3 hover:bg-gray-700/50 rounded-2xl transition-all duration-300 border border-gray-700/50 hover:border-purple-500/50"
             >
-              {category}
-            </button>
-          ))}
-        </div>
+              <ArrowLeft className="w-6 h-6 text-white group-hover:text-purple-400 group-hover:-translate-x-1 transition-all" />
+            </Link>
+            <div>
+              <motion.h1
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl sm:text-2xl font-black bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent tracking-tight"
+              >
+                Gift Shop
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-gray-400 text-sm font-bold"
+              >
+                Discover amazing gifts for every occasion
+              </motion.p>
+            </div>
+          </div>
 
-        {/* Products Grid with Sponsored Ads */}
-        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              className="p-3 hover:bg-gray-700/50 rounded-2xl transition-all duration-300 border border-gray-700/50 hover:border-purple-500/50"
+            >
+              {viewMode === 'grid' ? <List className="w-5 h-5 text-white" /> : <Grid className="w-5 h-5 text-white" />}
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-3 hover:bg-gray-700/50 rounded-2xl transition-all duration-300 border border-gray-700/50 hover:border-purple-500/50"
+            >
+              <Search className="w-5 h-5 text-white" />
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative p-3 hover:bg-gray-700/50 rounded-2xl transition-all duration-300 border border-gray-700/50 hover:border-purple-500/50"
+            >
+              <ShoppingCart className="w-5 h-5 text-white" />
+              {cart.length > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-lg"
+                >
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
+                </motion.span>
+              )}
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Enhanced Content */}
+      <div className="relative p-4 sm:p-6 pb-24">
+        {/* Enhanced Search Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mb-8"
+        >
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-purple-500 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search for the perfect gift..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-12 py-4 bg-gray-800/80 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 focus:bg-gray-800 transition-all duration-300 backdrop-blur-sm"
+            />
+            {searchTerm && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                onClick={() => setSearchTerm('')}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </motion.button>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Enhanced Filter Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-black text-white flex items-center gap-2 tracking-tight">
+              <Sparkles className="w-5 h-5 text-purple-500" />
+              Categories
+            </h3>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800/60 border border-gray-600/50 rounded-xl text-gray-300 hover:text-white hover:border-purple-500/50 transition-all duration-300"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+              <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </motion.button>
+          </div>
+
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {categories.map((category, index) => (
+              <motion.button
+                key={category}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9 + index * 0.1 }}
+                onClick={() => setFilterCategory(category)}
+                className={`group relative px-6 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all duration-300 ${
+                  filterCategory === category
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+                    : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700/80 hover:text-white border border-gray-600/50 hover:border-purple-500/50'
+                }`}
+              >
+                <span className="relative z-10">{category}</span>
+                {filterCategory === category && (
+                  <motion.div
+                    layoutId="activeFilter"
+                    className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl"
+                    style={{ zIndex: -1 }}
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Advanced Filters */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-6 p-6 bg-gray-800/50 rounded-2xl border border-gray-700/50 backdrop-blur-sm"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-300 mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full p-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="distance">Distance</option>
+                      <option value="price">Price</option>
+                      <option value="rating">Rating</option>
+                      <option value="name">Name</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-300 mb-2">Price Range</label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-400">₦{priceRange[0].toLocaleString()}</span>
+                      <div className="flex-1 h-2 bg-gray-700 rounded-full relative">
+                        <div
+                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                          style={{ width: `${(priceRange[1] / 200) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-gray-400">₦{priceRange[1].toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        setFilterCategory('All');
+                        setSearchTerm('');
+                        setPriceRange([0, 200]);
+                        setSortBy('distance');
+                      }}
+                      className="w-full px-4 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-500 hover:to-gray-600 transition-all duration-300 font-medium"
+                    >
+                      Reset Filters
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Enhanced Products Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0 }}
+          className="space-y-6"
+        >
+          {/* Results Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <TrendingUp className="w-5 h-5 text-purple-500" />
+              <h3 className="text-lg font-black text-white tracking-tight">
+                {filteredProducts.length} {filteredProducts.length === 1 ? 'Gift' : 'Gifts'} Found
+              </h3>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <Zap className="w-4 h-4" />
+              <span className="font-bold">Updated just now</span>
+            </div>
+          </div>
+
           {/* Banner Ad at Top */}
           <SponsoredAdDisplay
             placement="banner"
@@ -602,78 +844,224 @@ export default function GiftsShop() {
             maxAds={1}
           />
 
-          <div className="grid grid-cols-2 gap-4">
-            {filteredProducts.map((product, index) => (
-              <React.Fragment key={product.id}>
-                <div className="bg-gray-800 rounded-xl overflow-hidden">
-                  <div className="relative">
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="w-full h-32 object-cover"
-                    />
-                    {product.discount > 0 && (
-                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                        -{product.discount}%
-                      </div>
-                    )}
-                    <button
-                      onClick={() => handleAddToWishlist(product.id)}
-                      className="absolute top-2 right-2 p-2 bg-black bg-opacity-50 rounded-full"
+          {/* Enhanced Products Grid */}
+          <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5' : 'grid-cols-1'}`}>
+            <AnimatePresence mode="wait">
+              {filteredProducts.map((product, index) => (
+                <React.Fragment key={product.id}>
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                    transition={{
+                      delay: index * 0.1,
+                      duration: 0.5,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    className="group cursor-pointer"
+                    onMouseEnter={() => setHoveredProduct(product.id)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                  >
+                    <motion.div
+                      className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-700/50"
+                      whileHover={{
+                        scale: 1.02,
+                        rotateY: 2,
+                        rotateX: 2,
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
-                      <Heart className={`w-4 h-4 ${wishlist.has(product.id) ? 'text-red-500 fill-current' : 'text-white'}`} />
-                    </button>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-semibold text-white text-sm mb-1 line-clamp-2">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-1 mb-2">
-                      <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                      <span className="text-xs text-gray-300">{product.rating}</span>
-                      <span className="text-xs text-gray-400">({product.reviews})</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-purple-400 font-bold">{formatNairaPrice(product.price)}</span>
-                        {product.originalPrice > product.price && (
-                          <span className="text-gray-400 text-sm line-through ml-1">
-                            {formatNairaPrice(product.originalPrice)}
-                          </span>
-                        )}
+                      {/* Product Image */}
+                      <div className="relative overflow-hidden">
+                        <motion.img
+                          src={product.img}
+                          alt={product.name}
+                          className="w-full h-48 object-cover"
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.6, ease: "easeOut" }}
+                        />
+
+                        {/* Overlay gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                        {/* Badges */}
+                        <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                          {product.discount > 0 && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg"
+                            >
+                              -{product.discount}%
+                            </motion.div>
+                          )}
+
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleAddToWishlist(product.id)}
+                            className="ml-auto p-2 bg-black/50 backdrop-blur-sm rounded-full border border-white/20 hover:bg-black/70 transition-all"
+                          >
+                            <Heart className={`w-4 h-4 ${wishlist.has(product.id) ? 'text-red-500 fill-current' : 'text-white'}`} />
+                          </motion.button>
+                        </div>
+
+                        {/* Quick view button */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: hoveredProduct === product.id ? 1 : 0, y: hoveredProduct === product.id ? 0 : 20 }}
+                          className="absolute bottom-3 left-3 right-3"
+                        >
+                          <button className="w-full py-2 bg-white/90 backdrop-blur-sm text-gray-900 rounded-xl font-medium hover:bg-white transition-all">
+                            <Eye className="w-4 h-4 inline mr-2" />
+                            Quick View
+                          </button>
+                        </motion.div>
                       </div>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Insert sponsored ad after every 6th product */}
-                {(index + 1) % 6 === 0 && (
-                  <div className="col-span-2">
-                    <SponsoredAdDisplay
-                      placement="feed"
-                      category={filterCategory.toLowerCase()}
-                      maxAds={1}
-                    />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
+                      {/* Product Info */}
+                      <div className="p-5">
+                        <motion.h3
+                          className="font-black text-white text-lg mb-2 line-clamp-2 group-hover:text-purple-200 transition-colors tracking-tight"
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          {product.name}
+                        </motion.h3>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-4xl mb-4">🎁</div>
-            <h3 className="text-purple-400 text-lg font-semibold mb-2">No gifts found</h3>
-            <p className="text-gray-400">Try adjusting your search or filters</p>
+                        <p className="text-gray-400 text-sm mb-3 line-clamp-2 font-bold">{product.desc}</p>
+
+                        {/* Rating */}
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-sm font-bold text-white">{product.rating}</span>
+                          </div>
+                          <span className="text-xs text-gray-400">({product.reviews} reviews)</span>
+                          <span className="text-xs text-gray-500">•</span>
+                          <span className="text-xs text-gray-400">{product.seller}</span>
+                        </div>
+
+                        {/* Price and Add to Cart */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-purple-400 font-black text-xl">{formatNairaPrice(product.price)}</span>
+                            {product.originalPrice > product.price && (
+                              <span className="text-gray-500 text-sm line-through">
+                                {formatNairaPrice(product.originalPrice)}
+                              </span>
+                            )}
+                          </div>
+
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleAddToCart(product)}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-3 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                          </motion.button>
+                        </div>
+                      </div>
+
+                      {/* Hover glow effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                      />
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Insert sponsored ad after every 6th product */}
+                  {(index + 1) % 6 === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="col-span-full"
+                    >
+                      <SponsoredAdDisplay
+                        placement="feed"
+                        category={filterCategory.toLowerCase()}
+                        maxAds={1}
+                      />
+                    </motion.div>
+                  )}
+                </React.Fragment>
+              ))}
+            </AnimatePresence>
           </div>
-        )}
+        </motion.div>
+
+        {/* Enhanced Empty State */}
+        <AnimatePresence>
+          {filteredProducts.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="text-center py-20"
+            >
+              <motion.div
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="text-6xl mb-6"
+              >
+                🎁
+              </motion.div>
+
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-2xl font-bold text-white mb-3"
+              >
+                No gifts found
+              </motion.h3>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-gray-400 text-lg mb-8"
+              >
+                Try adjusting your search or filters to discover amazing gifts
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setSearchTerm('');
+                    setFilterCategory('All');
+                  }}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+                >
+                  Clear Filters
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 border border-purple-500/50 text-purple-400 rounded-xl font-medium hover:bg-purple-500 hover:text-white transition-all duration-300"
+                >
+                  Browse All Categories
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Bottom Navigation */}

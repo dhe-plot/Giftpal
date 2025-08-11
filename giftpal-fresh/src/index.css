@@ -1,3 +1,6 @@
+/* Import responsive styles */
+@import './styles/responsive.css';
+
 /* Enhanced GlowCard Animations */
 @keyframes breathe {
   0%, 100% { transform: scale(1); }
@@ -29,7 +32,7 @@
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 700;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -55,11 +58,25 @@ body {
   min-width: 320px;
   min-height: 100vh;
   width: 100%;
+  font-weight: 700;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+/* Global bold text styling */
+* {
+  font-weight: 700 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 900 !important;
+}
+
+p, span, div, a, button, input, label {
+  font-weight: 700 !important;
 }
 
 

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  User, MapPin, Calendar, Gift, Heart, Star, Settings,
-  Edit3, Camera, Award, Crown, Sparkles, Users, MessageCircle,
-  ArrowLeft, Home, ShoppingBag, Building2, Info
+  User, Gift, Star, Settings,
+  Edit3, Camera, Award, Crown, Sparkles, Users,
+  ArrowLeft, Home, ShoppingBag, Building2, Info, X, Save
 } from 'lucide-react';
 import { useAuth } from '../../providers/AuthProvider';
 import mrGiftLogo from '../../assets/giftpal_logo.png';
@@ -14,6 +14,8 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [editForm, setEditForm] = useState({});
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated
@@ -56,28 +58,97 @@ const ProfilePage = () => {
   }, [isAuthenticated, user, navigate]);
 
   const handleSaveProfile = () => {
+    // Update profile with edit form data
+    const updatedProfile = { ...profile, ...editForm };
+    setProfile(updatedProfile);
+
     // Save to localStorage
-    localStorage.setItem('userProfile', JSON.stringify(profile));
+    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
 
     // Update the authenticated user data
     updateUser({
-      name: profile.fullName,
-      avatar: profile.avatar,
+      name: updatedProfile.fullName,
+      avatar: updatedProfile.avatar,
       preferences: {
-        interests: profile.interests,
-        giftingStyle: profile.giftingStyle,
-        occasions: profile.occasions
+        interests: updatedProfile.interests,
+        giftingStyle: updatedProfile.giftingStyle,
+        occasions: updatedProfile.occasions
       }
     });
 
     setIsEditing(false);
+    setEditForm({});
   };
 
   const handleProfileChange = (field, value) => {
-    setProfile(prev => ({
+    setEditForm(prev => ({
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        handleProfileChange('avatar', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCameraCapture = async () => {
+    try {
+      // Check if we're on mobile and camera is available
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'user', // Front camera
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        // Create video element to capture photo
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.play();
+
+        video.onloadedmetadata = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0);
+
+          // Convert to base64
+          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+          handleProfileChange('avatar', dataURL);
+
+          // Stop camera stream
+          stream.getTracks().forEach(track => track.stop());
+        };
+      } else {
+        // Fallback to file input
+        fileInputRef.current?.click();
+      }
+    } catch (error) {
+      console.error('Camera access failed:', error);
+      // Fallback to file input
+      fileInputRef.current?.click();
+    }
+  };
+
+  const startEditing = () => {
+    setEditForm({
+      fullName: profile.fullName,
+      bio: profile.bio,
+      location: profile.location,
+      avatar: profile.avatar
+    });
+    setIsEditing(true);
   };
 
   if (!profile) {
@@ -238,44 +309,54 @@ const ProfilePage = () => {
       background: '#181A20',
       minHeight: '100vh',
       color: '#fff',
-      fontFamily: 'Inter, system-ui, sans-serif'
+      fontFamily: 'Inter, system-ui, sans-serif',
+      paddingBottom: window.innerWidth <= 768 ? '80px' : '0' // Space for mobile bottom nav
     }}>
       {/* Navigation Header */}
       <header style={{
         background: '#181111',
-        padding: '1rem 2rem',
+        padding: '1rem',
         borderBottom: '1px solid #333',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <img src={mrGiftLogo} alt="Mr. Gift Logo" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+          <img src={mrGiftLogo} alt="GIFTPAL Logo" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1.2rem' }}>MR.GIFT</div>
+            <div style={{ fontWeight: 700, fontSize: '1.2rem' }}>GIFTPAL</div>
             <div style={{ fontSize: '0.7rem', color: '#b0b8c1' }}>BY DHE-PLOT</div>
           </div>
         </div>
-        
-        <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <Link to="/" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+
+        <nav style={{
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+          '@media (max-width: 768px)': {
+            display: 'none'
+          }
+        }}>
+          <Link to="/" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
             <Home size={16} />
-            Home
+            <span style={{ display: window.innerWidth > 640 ? 'inline' : 'none' }}>Home</span>
           </Link>
-          <Link to="/gifts" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Link to="/gifts" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
             <ShoppingBag size={16} />
-            Gifts
+            <span style={{ display: window.innerWidth > 640 ? 'inline' : 'none' }}>Gifts</span>
           </Link>
-          <Link to="/brands" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Link to="/brands" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
             <Building2 size={16} />
-            Brands
+            <span style={{ display: window.innerWidth > 640 ? 'inline' : 'none' }}>Brands</span>
           </Link>
-          <Link to="/about" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Link to="/about" style={{ color: '#b0b8c1', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
             <Info size={16} />
-            About
+            <span style={{ display: window.innerWidth > 640 ? 'inline' : 'none' }}>About</span>
           </Link>
         </nav>
-        
+
         <button
           onClick={() => navigate('/')}
           style={{
@@ -289,7 +370,8 @@ const ProfilePage = () => {
             padding: '0.5rem 1rem',
             cursor: 'pointer',
             fontWeight: '500',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            fontSize: '0.9rem'
           }}
           onMouseEnter={(e) => {
             e.target.style.background = 'rgba(255, 255, 255, 0.15)';
@@ -299,31 +381,33 @@ const ProfilePage = () => {
           }}
         >
           <ArrowLeft size={16} />
-          Back to Home
+          <span style={{ display: window.innerWidth > 480 ? 'inline' : 'none' }}>Back to Home</span>
         </button>
       </header>
 
       {/* Profile Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1a1a1a, #2a2a2a)',
-        padding: '2rem',
+        padding: '1rem',
         borderRadius: '0 0 20px 20px'
       }}>
         <div style={{
           maxWidth: '800px',
           margin: '0 auto',
           display: 'flex',
-          gap: '2rem',
-          alignItems: 'flex-start'
+          flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+          gap: '1.5rem',
+          alignItems: window.innerWidth <= 768 ? 'center' : 'flex-start',
+          textAlign: window.innerWidth <= 768 ? 'center' : 'left'
         }}>
           {/* Avatar */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <div style={{
-              width: '120px',
-              height: '120px',
+              width: window.innerWidth <= 768 ? '100px' : '120px',
+              height: window.innerWidth <= 768 ? '100px' : '120px',
               borderRadius: '50%',
-              background: profile.avatar 
-                ? `url(${profile.avatar})` 
+              background: (isEditing ? editForm.avatar : profile.avatar)
+                ? `url(${isEditing ? editForm.avatar : profile.avatar})`
                 : 'linear-gradient(135deg, #FFB1EE, #5E9BFF)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -332,42 +416,78 @@ const ProfilePage = () => {
               justifyContent: 'center',
               border: '4px solid rgba(255, 177, 238, 0.3)'
             }}>
-              {!profile.avatar && <User size={60} color="#fff" />}
+              {!(isEditing ? editForm.avatar : profile.avatar) && <User size={window.innerWidth <= 768 ? 50 : 60} color="#fff" />}
             </div>
-            <button style={{
-              position: 'absolute',
-              bottom: '0',
-              right: '0',
-              width: '36px',
-              height: '36px',
-              background: '#FFB1EE',
-              borderRadius: '50%',
-              border: '3px solid #181A20',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer'
-            }}>
-              <Camera size={18} color="#000" />
-            </button>
+            {isEditing && (
+              <>
+                <button
+                  onClick={handleCameraCapture}
+                  style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    right: '0',
+                    width: '36px',
+                    height: '36px',
+                    background: '#FFB1EE',
+                    borderRadius: '50%',
+                    border: '3px solid #181A20',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Camera size={18} color="#000" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="user"
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                />
+              </>
+            )}
           </div>
 
           {/* Profile Info */}
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, width: '100%' }}>
             <div style={{
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+              alignItems: window.innerWidth <= 768 ? 'center' : 'center',
               gap: '1rem',
               marginBottom: '1rem'
             }}>
-              <h1 style={{
-                fontSize: '2rem',
-                fontWeight: '700',
-                margin: 0,
-                color: '#fff'
-              }}>
-                {profile.fullName}
-              </h1>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editForm.fullName || ''}
+                  onChange={(e) => handleProfileChange('fullName', e.target.value)}
+                  style={{
+                    fontSize: window.innerWidth <= 768 ? '1.5rem' : '2rem',
+                    fontWeight: '700',
+                    margin: 0,
+                    color: '#fff',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '8px',
+                    padding: '0.5rem',
+                    textAlign: window.innerWidth <= 768 ? 'center' : 'left'
+                  }}
+                  placeholder="Enter your name"
+                />
+              ) : (
+                <h1 style={{
+                  fontSize: window.innerWidth <= 768 ? '1.5rem' : '2rem',
+                  fontWeight: '700',
+                  margin: 0,
+                  color: '#fff'
+                }}>
+                  {profile.fullName}
+                </h1>
+              )}
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -392,19 +512,42 @@ const ProfilePage = () => {
               @{profile.username}
             </p>
 
-            <p style={{
-              color: '#fff',
-              fontSize: '1rem',
-              lineHeight: '1.5',
-              margin: '0 0 1.5rem 0'
-            }}>
-              {profile.bio}
-            </p>
+            {isEditing ? (
+              <textarea
+                value={editForm.bio || ''}
+                onChange={(e) => handleProfileChange('bio', e.target.value)}
+                style={{
+                  color: '#fff',
+                  fontSize: '1rem',
+                  lineHeight: '1.5',
+                  margin: '0 0 1.5rem 0',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  width: '100%',
+                  minHeight: '80px',
+                  resize: 'vertical',
+                  textAlign: window.innerWidth <= 768 ? 'center' : 'left'
+                }}
+                placeholder="Tell us about yourself..."
+              />
+            ) : (
+              <p style={{
+                color: '#fff',
+                fontSize: '1rem',
+                lineHeight: '1.5',
+                margin: '0 0 1.5rem 0'
+              }}>
+                {profile.bio}
+              </p>
+            )}
 
             <div style={{
               display: 'flex',
-              gap: '2rem',
-              marginBottom: '1.5rem'
+              gap: window.innerWidth <= 768 ? '1rem' : '2rem',
+              marginBottom: '1.5rem',
+              justifyContent: window.innerWidth <= 768 ? 'center' : 'flex-start'
             }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#FFB1EE' }}>
@@ -433,52 +576,115 @@ const ProfilePage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button
-                onClick={() => setIsEditing(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.5rem',
-                  background: 'linear-gradient(135deg, #FFB1EE, #5E9BFF)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  color: '#fff',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-1px)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(255, 177, 238, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                <Edit3 size={16} />
-                Edit Profile
-              </button>
-              <button style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem 1.5rem',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}>
-                <Settings size={16} />
-                Settings
-              </button>
+            <div style={{
+              display: 'flex',
+              gap: '1rem',
+              flexDirection: window.innerWidth <= 480 ? 'column' : 'row',
+              width: window.innerWidth <= 768 ? '100%' : 'auto'
+            }}>
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleSaveProfile}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      background: 'linear-gradient(135deg, #48F08B, #5E9BFF)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      flex: window.innerWidth <= 480 ? '1' : 'none'
+                    }}
+                  >
+                    <Save size={16} />
+                    Save Changes
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditForm({});
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      fontSize: '0.9rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      flex: window.innerWidth <= 480 ? '1' : 'none'
+                    }}
+                  >
+                    <X size={16} />
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={startEditing}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      background: 'linear-gradient(135deg, #FFB1EE, #5E9BFF)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      flex: window.innerWidth <= 480 ? '1' : 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-1px)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(255, 177, 238, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <Edit3 size={16} />
+                    Edit Profile
+                  </button>
+                  <button style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem 1.5rem',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '12px',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    flex: window.innerWidth <= 480 ? '1' : 'none'
+                  }}>
+                    <Settings size={16} />
+                    Settings
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -488,15 +694,18 @@ const ProfilePage = () => {
       <div style={{
         maxWidth: '800px',
         margin: '0 auto',
-        padding: '2rem'
+        padding: '1rem'
       }}>
         {/* Tabs */}
         <div style={{
           display: 'flex',
-          gap: '2rem',
+          gap: window.innerWidth <= 480 ? '1rem' : '2rem',
           marginBottom: '2rem',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          paddingBottom: '1rem'
+          paddingBottom: '1rem',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
         }}>
           {['overview', 'stories', 'gifts', 'reviews'].map((tab) => (
             <button
@@ -506,13 +715,15 @@ const ProfilePage = () => {
                 background: 'none',
                 border: 'none',
                 color: activeTab === tab ? '#FFB1EE' : 'rgba(255, 255, 255, 0.7)',
-                fontSize: '1rem',
+                fontSize: window.innerWidth <= 480 ? '0.9rem' : '1rem',
                 fontWeight: '500',
                 cursor: 'pointer',
                 padding: '0.5rem 0',
                 borderBottom: activeTab === tab ? '2px solid #FFB1EE' : 'none',
                 textTransform: 'capitalize',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+                minWidth: 'fit-content'
               }}
             >
               {tab}
