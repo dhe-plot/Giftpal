@@ -20,8 +20,10 @@ import ChatbotDemo from './components/ui/chatbot-demo'
 // Import Chat System
 
 
-// Import Splash Screen
+// Import Splash Screen and Landing Page
 import SplashScreen from './components/ui/SplashScreen'
+import LandingPage from './components/ui/LandingPage'
+import PersonalizationFlow from './components/onboarding/PersonalizationFlow'
 
 // Import GlowCard demo
 import { Default as GlowCardDemo } from './components/ui/demo'
@@ -71,25 +73,58 @@ import EditableProfile from './components/profile/EditableProfile'
 // Main App component with routing
 function App() {
   const [showSplash, setShowSplash] = useState(true)
+  const [showLanding, setShowLanding] = useState(false)
+  const [showPersonalization, setShowPersonalization] = useState(false)
+  const [userPreferences, setUserPreferences] = useState(null)
 
-  // Check if user has seen splash screen recently (within 5 minutes for development)
+  // Check if user has seen splash screen recently and has preferences
   useEffect(() => {
     const lastSplashTime = localStorage.getItem('giftpal_last_splash')
+    const savedPreferences = localStorage.getItem('giftpal_preferences')
     const now = Date.now()
     const fiveMinutes = 5 * 60 * 1000 // Show splash more frequently during development
 
+    if (savedPreferences) {
+      setUserPreferences(JSON.parse(savedPreferences))
+    }
+
     if (lastSplashTime && (now - parseInt(lastSplashTime)) < fiveMinutes) {
       setShowSplash(false)
+      // If user has preferences, skip to main app
+      if (savedPreferences) {
+        setShowLanding(false)
+        setShowPersonalization(false)
+      }
     }
   }, [])
 
   const handleSplashComplete = () => {
     localStorage.setItem('giftpal_last_splash', Date.now().toString())
     setShowSplash(false)
+    setShowLanding(true)
+  }
+
+  const handleGetStarted = () => {
+    setShowLanding(false)
+    setShowPersonalization(true)
+  }
+
+  const handlePersonalizationComplete = (preferences) => {
+    setUserPreferences(preferences)
+    localStorage.setItem('giftpal_preferences', JSON.stringify(preferences))
+    setShowPersonalization(false)
   }
 
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />
+  }
+
+  if (showLanding) {
+    return <LandingPage onGetStarted={handleGetStarted} />
+  }
+
+  if (showPersonalization) {
+    return <PersonalizationFlow onComplete={handlePersonalizationComplete} />
   }
 
   return (
